@@ -1,0 +1,64 @@
+---
+title: "project_1_code"
+format: html
+editor: visual
+---
+
+# PART ONE: DATA PROCESSING
+
+## PARSING VARIABLE VALUES
+
+*Writing a function to **GET()** the URL, parse the JSON, and pull out a list of variables with their values*
+
+```{r}
+#Reading in httr and jsonlite packages
+library(httr)
+library(jsonlite)
+library(dplyr)
+
+#Building the URL and parsing data for 2021
+DATA_2021 <- "https://api.census.gov/data/2021/acs/acs1/pums/variables.json"
+URL_2021 <- httr::GET(DATA_2021)
+parsed_2021 <- fromJSON(rawToChar(URL_2021$content))
+variables_2021 <- as_tibble(parsed_2021$data)
+variables_2021
+```
+
+```{r}
+#Building URL and parsing data for 2022
+DATA_2022 <- "https://api.census.gov/data/2022/acs/acs1/pums/variables.json"
+URL_2022 <- httr::GET(DATA_2022)
+parsed_2022 <- fromJSON(rawToChar(URL_2022$content))
+variables_2022 <- as_tibble(parsed_2022$data)
+variables_2022
+```
+
+```{r}
+#Building URL and parsing data for 2023
+DATA_2023 <- "https://api.census.gov/data/2023/acs/acs1/pums/variables.json"
+URL_2023 <- httr::GET(DATA_2023)
+parsed_2023<- fromJSON(rawToChar(URL_2023$content))
+variables_2023 <- as_tibble(parsed_2023$data)
+variables_2023
+```
+
+```{r}
+#Building URL and parsing data for 2024
+DATA_2024 <- "https://api.census.gov/data/2024/acs/acs1/pums/variables.json"
+URL_2024 <- httr::GET(DATA_2024)
+parsed_2024 <- fromJSON(rawToChar(URL_2024$content))
+variables_2024 <- as_tibble(parsed_2024$data)
+variables_2024
+```
+
+## PARSING API DATA
+
+## COMBINING YEARS
+
+# PART TWO: WRITING A GENERIC FUNCTION OR SUMMARIZING
+
+## GENERIC FUNCTIONS
+
+## NUMERIC SUMMARIES
+
+## GRAPHICAL SUMMARIES
