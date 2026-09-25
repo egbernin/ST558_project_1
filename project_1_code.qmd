@@ -4,13 +4,19 @@ format: html
 editor: visual
 ---
 
+# PART 1: DATA PROCESSING
+
+## PARSING VARIABLE VALUES
+
 *Writing functions to get URLs*
 
 ```{r}
+#Reading in packages to current session
 library(httr)
 library(jsonlite)
 library(dplyr)
 
+#Writing functions to get urls and parse them. Note that the parsed_data objects are very large and take a long time to load.
 list_vars_21 <- function(api_url1){
   api_url1 <- 'https://api.census.gov/data/2021/acs/acs1/pums/variables.json'
   data_url1 <- httr::GET(api_url1)
@@ -34,4 +40,64 @@ list_vars_24 <- function(api_url4){
   data_url4 <- httr::GET(api_url4)
   parsed_data4 <- fromJSON(rawToChar(data_url4$content))
 }
+```
+
+*Testing one of the functions to see if it works. The function works with both the link to the variables and the api_url object.*
+
+```{r}
+#Must include variables column when retrieving a specific element, otherwise it will return a NULL.
+test_24 <- list_vars_24(api_url4)
+test_24$variables$SEX
+```
+
+## PARSING API DATA
+
+```{r}
+library(lubridate)
+
+pums_data_21_22 <- httr::GET('api.census.gov/data/2024/acs/acs1/pums?get=AGEP,GRPIP,JWAP,JWDP,JWMNP,PWGTP,FER,HHL,SCH,SCHL,SEX,ST,REGION,DIVISION&key=YOUR_KEY_GOES_HERE')
+
+helper_21_22 <- function(pums_data_21_22){
+  tibble_data <- as.tibble(pums_data_21_22$data)
+  parsed_data <- rawToChar(tibble_data$content)
+}
+
+pums_data_23_24 <- httr::GET('api.census.gov/data/2024/acs/acs1/pums?get=AGEP,GRPIP,JWAP,JWDP,JWMNP,PWGTP,FER,HHL,SCH,SCHL,SEX,STATE,REGION,DIVISION&key=YOUR_KEY_GOES_HERE')
+
+helper_23_24 <- function(pums_data_23_24){
+  tibble_data2 <- as.tibble(pums_data_23_24$data)
+  parsed_data2 <- rawToChar(tibble_data2$content)
+}
+
+change_date <- function('name of parsed data'){
+  if(list_vars_21){
+    year_of_survey <- '2021'
+    return(year_of_survey)
+  } else if(list_vars_22){
+    year_of_survey <- '2022'
+    return(year_of_survey)
+  } else if(list_vars_23){
+    year_of_survey <- '2023'
+    return(year_of_survey)
+  } else if(list_vars_24){
+    year_of_survey <- '2024'
+    return(year_of_survey)
+  }
+}
+
+change_num_variable <- function('name of parsed data'){
+  if(parsed_data$variables$AGEP, parsed_data$variables$GASP, parsed_data$variables$GRPIP, parsed_data$variables$JWMNP){
+    as.numeric(parsed_data$variables$AGEP, parsed_data$variables$GASP, parsed_data$variables$GRPIP, parsed_data$variables$JWMNP)
+  } else if(parsed_data$variables$JWAP, parsed_data$variables$JWDP){
+    as.Date(parsed_data$variables$JWAP, parsed_data$variables$JWDP, format = '%m %d %Y')
+  } 
+}
+return_num_variable <- function('name of parsed data'){
+  
+}
+
+return_cat_variable <- function('name of data'){
+  
+}
+
 ```
