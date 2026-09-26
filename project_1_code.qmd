@@ -88,16 +88,22 @@ change_date <- function('name of parsed data'){
 change_num_variable <- function('name of parsed data'){
   if(parsed_data$variables$AGEP, parsed_data$variables$GASP, parsed_data$variables$GRPIP, parsed_data$variables$JWMNP){
     as.numeric(parsed_data$variables$AGEP, parsed_data$variables$GASP, parsed_data$variables$GRPIP, parsed_data$variables$JWMNP)
-  } else if(parsed_data$variables$JWAP, parsed_data$variables$JWDP){
-    as.Date(parsed_data$variables$JWAP, parsed_data$variables$JWDP, format = '%m %d %Y')
-  } 
-}
-return_num_variable <- function('name of parsed data'){
-  
 }
 
-return_cat_variable <- function('name of data'){
-  
+#Find the midpoint by calculating the average and print it into a string
+change_time_variable <- function('name of data'){
+  time_JWAP_start <- 'use helper data$variables$JWAP'
+  time_JWAP_end <- 'use helper data$variables$JWAP'
+  time_JWDP_start <- 'use helper data$variables$JWDP'
+  time_JWAP_end <- 'use helper data$variables$JWDP'
+  hms_JWAP_start <- hms(time_JWAP_start)
+  hms_JWAP_end <- hms(time_JWAP_end)
+  hms_JWDP_start <- hms(time_JWDP_start)
+  hms_JWDP_end <- hms(time_JWDP_end)
+  average_JWAP <- mean(c(hms_JWAP_start, hms_JWAP_end))
+  average_JWDP <- mean(c(hms_JWDP_start, hms_JWDP_end))
+  midpoint_JWAP <- format(as_datetime(average_JWAP), '%H:%M:%S')
+  midpoint_JWDP <- format(as_datetime(average_JWDP), '%H:%M:%S')
+  print(midpoint_JWAP, midpoint_JWDP)
 }
-
 ```
