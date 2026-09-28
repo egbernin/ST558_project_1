@@ -49,10 +49,14 @@ list_vars_24 <- function(api_url4){
 variables_2024 <- list_vars_24(api_url4)
 ```
 
-*Putting variable lists into .Rmd file*.
+*Putting variable lists into .rds files.*
 
 ```{r}
-
+#Previously attempted this by putting everything into one data frame, but it ended up recycling parts due to uneven lengths.
+saveRDS(variables_2021, file = '2021_variables.rds')
+saveRDS(variables_2022, file = '2022_variables.rds')
+saveRDS(variables_2023, file = '2023_variables.rds')
+saveRDS(variables_2024, file = '2024_variables.rds')
 ```
 
 *Testing one of the functions to see if it works. The function works with both the link to the variables and the api_url object.*
