@@ -8,38 +8,51 @@ editor: visual
 
 ## PARSING VARIABLE VALUES
 
-*Writing functions to get URLs*
-
 ```{r}
 #Reading in packages to current session
 library(httr)
 library(jsonlite)
 library(dplyr)
+library(tidyverse)
+```
 
-#Writing functions to get urls and parse them. Note that the parsed_data objects are very large and take a long time to load.
+*Writing functions to parse variable data.*
+
+```{r}
+#Writing functions to get urls and parse them. Note that the parsed_data objects on their own are very large and take a long time to load. It's easier to use str() to look at them.
 list_vars_21 <- function(api_url1){
   api_url1 <- 'https://api.census.gov/data/2021/acs/acs1/pums/variables.json'
   data_url1 <- httr::GET(api_url1)
   parsed_data1 <- fromJSON(rawToChar(data_url1$content))
 }
+variables_2021 <- list_vars_21(api_url1)
 
 list_vars_22 <- function(api_url2){
   api_url2 <- 'https://api.census.gov/data/2022/acs/acs1/pums/variables.json'
   data_url2 <- httr::GET(api_url2)
   parsed_data2 <- fromJSON(rawToChar(data_url2$content))
 }
+variables_2022 <- list_vars_22(api_url2)
 
 list_vars_23 <- function(api_url3){
   api_url3 <- 'https://api.census.gov/data/2023/acs/acs1/pums/variables.json'
   data_url3 <- httr::GET(api_url3)
   parsed_data3 <- fromJSON(rawToChar(data_url3$content))
 }
+variables_2023 <- list_vars_23(api_url3)
 
 list_vars_24 <- function(api_url4){
   api_url4 <- 'https://api.census.gov/data/2024/acs/acs1/pums/variables.json'
   data_url4 <- httr::GET(api_url4)
   parsed_data4 <- fromJSON(rawToChar(data_url4$content))
 }
+variables_2024 <- list_vars_24(api_url4)
+```
+
+*Putting variable lists into .Rmd file*.
+
+```{r}
+saveRDS(variables_2021, variables_2022, variables_2023, variables_2024, file = 'variable_lists.Rmd')
 ```
 
 *Testing one of the functions to see if it works. The function works with both the link to the variables and the api_url object.*
@@ -52,24 +65,77 @@ test_24$variables$SEX
 
 ## PARSING API DATA
 
+*Getting URL, writing helper function, and parsing data.*
+
 ```{r}
 library(lubridate)
+#Getting 2021 survey
+pums_data_21 <- httr::GET('api.census.gov/data/2021/acs/acs1/pums?get=AGEP,GRPIP,JWAP,JWDP,JWMNP,PWGTP,FER,HHL,SCH,SCHL,SEX,ST,REGION,DIVISION&key=97196a6e47d04457a6ffdf399f45a446')
 
-pums_data_21_22 <- httr::GET('api.census.gov/data/2024/acs/acs1/pums?get=AGEP,GRPIP,JWAP,JWDP,JWMNP,PWGTP,FER,HHL,SCH,SCHL,SEX,ST,REGION,DIVISION&key=YOUR_KEY_GOES_HERE')
-
-helper_21_22 <- function(pums_data_21_22){
-  tibble_data <- as.tibble(pums_data_21_22$data)
-  parsed_data <- rawToChar(tibble_data$content)
+#Using function to make it into a tibble
+helper_21 <- function(pums_data_21){
+  parsed_data <- rawToChar(pums_data_21[content])
+  tibble_data <- as.tibble(parsed_data[data])
 }
 
-pums_data_23_24 <- httr::GET('api.census.gov/data/2024/acs/acs1/pums?get=AGEP,GRPIP,JWAP,JWDP,JWMNP,PWGTP,FER,HHL,SCH,SCHL,SEX,STATE,REGION,DIVISION&key=YOUR_KEY_GOES_HERE')
+#Creating named object from tibble
+parsed_tibble_21 <- helper_21(pums_data_21)
 
-helper_23_24 <- function(pums_data_23_24){
-  tibble_data2 <- as.tibble(pums_data_23_24$data)
-  parsed_data2 <- rawToChar(tibble_data2$content)
+#Getting 2022 survey
+pums_data_22 <- httr::GET('api.census.gov/data/2022/acs/acs1/pums?get=AGEP,GRPIP,JWAP,JWDP,JWMNP,PWGTP,FER,HHL,SCH,SCHL,SEX,ST,REGION,DIVISION&key=97196a6e47d04457a6ffdf399f45a446')
+
+#Using function to make it into a tibble
+helper_22 <- function(pums_data_22){
+  tibble_data2 <- as.tibble(pums_data_22$data)
+  raw_data2 <- as.raw(tibble_data2)
+  parsed_data2 <- rawToChar(raw_data2$content)
 }
 
-change_date <- function('name of parsed data'){
+#Creating named object from tibble
+parsed_tibble_22 <- helper_22(pums_data_22)
+
+#Getting 2023 survey
+pums_data_23 <- httr::GET('api.census.gov/data/2023/acs/acs1/pums?get=AGEP,GRPIP,JWAP,JWDP,JWMNP,PWGTP,FER,HHL,SCH,SCHL,SEX,ST,REGION,DIVISION&key=97196a6e47d04457a6ffdf399f45a446')
+
+#Using function to make it into a tibble
+helper_23 <- function(pums_data_23){
+  tibble_data3 <- as.tibble(pums_data_23$data)
+  raw_data3 <- as.raw(tibble_data3)
+  parsed_data3 <- rawToChar(raw_data3$content)
+}
+
+#Creating named object from tibble
+parsed_tibble_23 <- helper_23(pums_data_23)
+
+#Getting 2024 survey
+pums_data_24 <- httr::GET('api.census.gov/data/2024/acs/acs1/pums?get=AGEP,GRPIP,JWAP,JWDP,JWMNP,PWGTP,FER,HHL,SCH,SCHL,SEX,STATE,REGION,DIVISION&key=97196a6e47d04457a6ffdf399f45a446')
+
+#Using function to make it into a tibble
+helper_24 <- function(pums_data_24){
+  tibble_data4 <- as.tibble(pums_data_24$data)
+  raw_data4 <- as.raw(tibble_data4)
+  parsed_data4 <- rawToChar(raw_data4$content)
+}
+
+#Creating named object from tibble
+parsed_tibble_24 <- helper_24(pums_data_24)
+
+#Checking structure of tibbles to make sure that specific elements are being called correctly.
+str(parsed_tibble_21)
+str(parsed_tibble_22)
+str(parsed_tibble_23)
+str(parsed_tibble_24)
+```
+
+```{r}
+
+```
+
+*Writing function that allows user to change year of survey.*
+
+```{r}
+#Writing function to return year of survey
+return_date <- function('name of parsed variables'){
   if(list_vars_21){
     year_of_survey <- '2021'
     return(year_of_survey)
@@ -84,13 +150,18 @@ change_date <- function('name of parsed data'){
     return(year_of_survey)
   }
 }
+```
 
-change_num_variable <- function('name of parsed data'){
+*Writing functions to specify numeric variables to be returned*.
+
+```{r}
+#Planning out function to change variables to numeric
+change_num_variable <- function('name of parsed data$variables$target var'){
   if(parsed_data$variables$AGEP, parsed_data$variables$GASP, parsed_data$variables$GRPIP, parsed_data$variables$JWMNP){
     as.numeric(parsed_data$variables$AGEP, parsed_data$variables$GASP, parsed_data$variables$GRPIP, parsed_data$variables$JWMNP)
 }
 
-#Find the midpoint by calculating the average and print it into a string
+#Planning out function to change variables to time
 change_time_variable <- function('name of data'){
   time_JWAP_start <- 'use helper data$variables$JWAP'
   time_JWAP_end <- 'use helper data$variables$JWAP'
@@ -105,5 +176,80 @@ change_time_variable <- function('name of data'){
   midpoint_JWAP <- format(as_datetime(average_JWAP), '%H:%M:%S')
   midpoint_JWDP <- format(as_datetime(average_JWDP), '%H:%M:%S')
   print(midpoint_JWAP, midpoint_JWDP)
+}
+
+#Possibly a better helper function?
+change_time_variable <- function('inputs'){
+  time_JWAP <- 'use parsed tibble'
+  time_JWDP <- 'use parsed tibble'
+  JWAP_midpoint <- lapply(X = time_JWAP, FUN = mean.difftime, na.rm = TRUE)
+  JWDP_midpoint <- lapply(X = time_JWDP, FUN = mean.difftime, na.rm = TRUE)
+  print(JWAP_midpoint, JWDP_midpoint)
+}
+
+```
+
+*Writing functions to specify categorical variables to be returned.*
+
+```{r}
+categorical_helper <- function('input'){
+  category_lists <- readRDS('file')
+}
+
+#Writing function to return categorical variables
+return_cat_vars <- function('input'){
+  cat_helper <- function('input'){
+    category_lists <- readRDS('file')
+  }
+  as.factor('list the variables here')
+  
+}
+```
+
+*Writing function to specify geography level.*
+
+```{r}
+
+```
+
+*Writing function to specify region, division, or state to subset data on.*
+
+```{r}
+#Specifying region, division, or state
+region_division_state <- function('input'){
+  
+}
+```
+
+## COMBINING YEARS
+
+*Writing function to specify multiple years of survey data.*
+
+```{r}
+
+```
+
+# PART TWO: WRITING A GENERIC FUNCTION FOR SUMMARIZING
+
+## NUMERIC SUMMARIES
+
+```{r}
+#Writing function for numerical summaries
+summary.census <- function(tibble, numeric_vector, weight_vector){
+  tibble <- 'put tibble here'
+  numeric_vector <- 'put numeric vector here'
+  weight_vector <- 'put weight vector here'
+  sample_mean <- sum(numeric_vector*weight_vector)/sum(weight_vector)
+  sample_std_dev <- sqrt(sum(numeric_vectorˆ2*weight_vector)/sum(weight_vector)-sample_meanˆ2)
+  return(list(sample_mean, sample_std_dev))
+}
+```
+
+## GRAPHICAL SUMMARIES
+
+```{r}
+#Writing function for graphical summaries
+box_plot <- function(cat, num){
+  return(plot('name', aes(x = cat, y = num, fill = cat, weight = PWGTP)
 }
 ```
