@@ -178,7 +178,7 @@ test_date <- return_date(2021)
 str(test_date)
 ```
 
-*Writing functions to specify numeric variables to be returned*.
+*Writing functions to specify numeric variables to be returned*. (function still needs to be worked on)
 
 ```{r}
 return_time_variable <- function(year_of_survey){
@@ -271,7 +271,7 @@ return_num_variable <- function(year_of_survey){
 
 ```
 
-*Writing functions to specify categorical variables to be returned.*
+*Writing functions to specify categorical variables to be returned. (functions still need to be worked on)*
 
 ```{r}
 return_cat_vars <- function(year_of_survey){
