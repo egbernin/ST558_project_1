@@ -14,6 +14,7 @@ library(httr)
 library(jsonlite)
 library(dplyr)
 library(tidyverse)
+library(lubridate)
 ```
 
 *Writing functions to parse variable data.*
@@ -59,55 +60,304 @@ saveRDS(variables_2023, file = '2023_variables.rds')
 saveRDS(variables_2024, file = '2024_variables.rds')
 ```
 
-*Testing one of the functions to see if it works. The function works with both the link to the variables and the api_url object.*
+*Testing the functions to see if they work. The functions work with both the link to the variables and the api_url object.*
 
 ```{r}
 #Must include variables column when retrieving a specific element, otherwise it will return a NULL.
+test_21 <- list_vars_21(api_url1)
+test_21$variables$ST
+
+test_22 <- list_vars_22(api_url2)
+test_22$variables$AGEP
+
+test_23 <- list_vars_23(api_url3)
+test_23$variables$GRPIP
+
 test_24 <- list_vars_24(api_url4)
 test_24$variables$SEX
 ```
 
 ## PARSING API DATA
 
-*Getting URL, writing helper function, and parsing data.*
+*Getting URL, writing helper function, and parsing data. These take a long time to run. (functions work, no editing needed, remove note later)*
 
 ```{r}
+#Getting 2021 survey
+pums_data_21 <- httr::GET('api.census.gov/data/2021/acs/acs1/pums?get=AGEP,GRPIP,JWAP,JWDP,JWMNP,PWGTP,FER,HHL,SCH,SCHL,SEX,ST,REGION,DIVISION&key=416ac733e884381d5fc80215dc879af0edb1dd8b')
 
+#Using function to make it into a tibble
+helper_21 <- function(pums_data_21){
+  parsed_data <- fromJSON(rawToChar(pums_data_21$content))
+  tibble_data <- as_tibble(parsed_data)
+}
+
+#Creating named object from tibble and checking structure
+parsed_tibble_21 <- helper_21(pums_data_21)
+str(parsed_tibble_21)
 ```
 
 ```{r}
+#Getting 2022 survey
+pums_data_22 <- httr::GET('api.census.gov/data/2022/acs/acs1/pums?get=AGEP,GRPIP,JWAP,JWDP,JWMNP,PWGTP,FER,HHL,SCH,SCHL,SEX,ST,REGION,DIVISION&key=416ac733e884381d5fc80215dc879af0edb1dd8b')
 
+#Using function to make it into a tibble
+helper_22 <- function(pums_data_22){
+  parsed_data2 <- fromJSON(rawToChar(pums_data_22$content))
+  tibble_data2 <- as_tibble(parsed_data2)
+}
+
+#Creating named object from tibble and checking structure
+parsed_tibble_22 <- helper_22(pums_data_22)
+str(parsed_tibble_22)
 ```
 
-*Writing function that allows user to change year of survey.*
+```{r}
+#Getting 2023 survey
+pums_data_23 <- httr::GET('api.census.gov/data/2023/acs/acs1/pums?get=AGEP,GRPIP,JWAP,JWDP,JWMNP,PWGTP,FER,HHL,SCH,SCHL,SEX,STATE,REGION,DIVISION&key=416ac733e884381d5fc80215dc879af0edb1dd8b')
+
+#Using function to make it into a tibble
+helper_23 <- function(pums_data_23){
+  parsed_data3 <- fromJSON(rawToChar(pums_data_23$content))
+  tibble_data3 <- as_tibble(parsed_data3)
+}
+
+#Creating named object from tibble and checking structure
+parsed_tibble_23 <- helper_23(pums_data_23)
+str(parsed_tibble_23)
+```
 
 ```{r}
+#Getting 2024 survey
+pums_data_24 <- httr::GET('api.census.gov/data/2024/acs/acs1/pums?get=AGEP,GRPIP,JWAP,JWDP,JWMNP,PWGTP,FER,HHL,SCH,SCHL,SEX,STATE,REGION,DIVISION&key=416ac733e884381d5fc80215dc879af0edb1dd8b')
 
+#Using function to make it into a tibble
+helper_24 <- function(pums_data_24){
+  parsed_data4 <- fromJSON(rawToChar(pums_data_24$content))
+  tibble_data4 <- as_tibble(parsed_data4)
+}
+
+#Creating named object from tibble and checking structure
+parsed_tibble_24 <- helper_24(pums_data_24)
+str(parsed_tibble_24)
+```
+
+*Writing function that allows user to change year of survey. This function takes a long time to run and returns a lot of data. The example at the bottom uses str() to reduce the amount of information returned. (function works, no editing needed, remove note later)*
+
+```{r}
+#Writing function to return year of survey
+return_date <- function(year_vector){
+  year_vector <- c(2021, 2022, 2023, 2024)
+  if(2021){
+    api_2021 <- 'api.census.gov/data/2021/acs/acs1/pums?get=AGEP,GRPIP,JWAP,JWDP,JWMNP,PWGTP,FER,HHL,SCH,SCHL,SEX,ST,REGION,DIVISION&key=416ac733e884381d5fc80215dc879af0edb1dd8b'
+    url_2021 <- httr::GET(api_2021)
+    parsed_data_2021 <- fromJSON(rawToChar(url_2021$content))
+    date_tibble_21 <- as_tibble(parsed_data_2021)
+    return(date_tibble_21)
+  }else if(2022){
+    api_2022 <- 'api.census.gov/data/2022/acs/acs1/pums?get=AGEP,GRPIP,JWAP,JWDP,JWMNP,PWGTP,FER,HHL,SCH,SCHL,SEX,ST,REGION,DIVISION&key=416ac733e884381d5fc80215dc879af0edb1dd8b'
+    url_2022 <- httr::GET(api_2022)
+    parsed_data_2022 <- fromJSON(rawToChar(url_2022$content))
+    date_tibble_22 <- as_tibble(parsed_data_2022)
+    return(date_tibble_22)
+  }else if(2023){
+    api_2023 <- 'api.census.gov/data/2023/acs/acs1/pums?get=AGEP,GRPIP,JWAP,JWDP,JWMNP,PWGTP,FER,HHL,SCH,SCHL,SEX,STATE,REGION,DIVISION&key=416ac733e884381d5fc80215dc879af0edb1dd8b'
+    url_2023 <- httr::GET(api_2023)
+    parsed_data_2023 <- fromJSON(rawToChar(url_2023$content))
+    date_tibble_23 <- as_tibble(parsed_data_2023)
+    return(date_tibble_23)
+  }else if(2024){
+    api_2024 <- 'api.census.gov/data/2024/acs/acs1/pums?get=AGEP,GRPIP,JWAP,JWDP,JWMNP,PWGTP,FER,HHL,SCH,SCHL,SEX,STATE,REGION,DIVISION&key=416ac733e884381d5fc80215dc879af0edb1dd8b'
+    url_2024 <- httr::GET(api_2024)
+    parsed_data_2024 <- fromJSON(rawToChar(url_2024$content))
+    date_tibble_24 <- as_tibble(parsed_data_2024)
+    return(date_tibble_24)
+  }
+}
+
+test_date <- return_date(2021)
+str(test_date)
 ```
 
 *Writing functions to specify numeric variables to be returned*.
 
 ```{r}
+return_time_variable <- function(year_of_survey){
+  year_of_survey <- list(2021, 2022, 2023, 2024)
+  if(2021){
+    readRDS('2021_variables.rds')
+    time_JWAP <- as.numeric(variables_2021$variables$JWAP)
+    JWAP_clean <- time_JWAP[!is.na(time_JWAP)]
+    time_JWDP <- as.numeric(variables_2021$variables$JWDP)
+    JWDP_clean <- time_JWDP[!is.na(time_JWDP)]
+    JWAP_midpoint <- lapply(X = JWAP_clean, FUN = mean.difftime, na.rm = TRUE)
+    JWDP_midpoint <- lapply(X = JWDP_clean, FUN = mean.difftime, na.rm = TRUE)
+    JWAP_time <- hms(JWAP_midpoint)
+    JWDP_time <- hms(JWDP_midpoint)
+    return(list(JWAP = JWAP_time, JWDP = JWDP_time))
+  }else if(2022){
+    readRDS('2022_variables.rds')
+    time_JWAP <- as.numeric(variables_2022$variables$JWAP)
+    JWAP_clean <- time_JWAP[!is.na(time_JWAP)]
+    time_JWDP <- as.numeric(variables_2022$variables$JWDP)
+    JWDP_clean <- time_JWDP[!is.na(time_JWDP)]
+    JWAP_midpoint <- lapply(X = JWAP_clean, FUN = mean.difftime, na.rm = TRUE)
+    JWDP_midpoint <- lapply(X = JWDP_clean, FUN = mean.difftime, na.rm = TRUE)
+    JWAP_time <- hms(JWAP_midpoint)
+    JWDP_time <- hms(JWDP_midpoint)
+    return(list(JWAP = JWAP_time, JWDP = JWDP_time))
+  }else if(2023){
+    readRDS('2023_variables.rds')
+    time_JWAP <- as.numeric(variables_2023$variables$JWAP)
+    JWAP_clean <- time_JWAP[!is.na(time_JWAP)]
+    time_JWDP <- as.numeric(variables_2023$variables$JWDP)
+    JWDP_clean <- time_JWDP[!is.na(time_JWDP)]
+    JWAP_midpoint <- lapply(X = JWAP_clean, FUN = mean.difftime, na.rm = TRUE)
+    JWDP_midpoint <- lapply(X = JWDP_clean, FUN = mean.difftime, na.rm = TRUE)
+    JWAP_time <- hms(JWAP_midpoint)
+    JWDP_time <- hms(JWDP_midpoint)
+    return(list(JWAP = JWAP_time, JWDP = JWDP_time))
+  }else if(2024){
+    readRDS('2024_variables.rds')
+    time_JWAP <- as.numeric(variables_2024$variables$JWAP)
+    JWAP_clean <- time_JWAP[!is.na(time_JWAP)]
+    time_JWDP <- as.numeric(variables_2024$variables$JWDP)
+    JWDP_clean <- time_JWDP[!is.na(time_JWDP)]
+    JWAP_midpoint <- lapply(X = JWAP_clean, FUN = mean.difftime, na.rm = TRUE)
+    JWDP_midpoint <- lapply(X = JWDP_clean, FUN = mean.difftime, na.rm = TRUE)
+    JWAP_time <- hms(JWAP_midpoint)
+    JWDP_time <- hms(JWDP_midpoint)
+    return(list(JWAP = JWAP_midpoint, JWDP = JWDP_midpoint))
+  }else{
+    'ERROR'
+  }
+}
 
+test_time_24 <- return_time_variable(2024)
+test_time_24
+```
+
+```{r}
+test_num <- httr::GET('api.census.gov/data/2021/acs/acs1/pums?get=AGEP,GASP,GRPIP,JWMNP&key=416ac733e884381d5fc80215dc879af0edb1dd8b')
+parsed_test <- fromJSON(rawToChar(test_num$content))
+tibble_test <- as_tibble(parsed_test)
+```
+
+```{r}
+return_num_variable <- function(year_of_survey){
+  year_of_survey <- c(2021, 2022, 2023, 2024)
+  if(2021){
+    num_api <- 'api.census.gov/data/2021/acs/acs1/pums?get=AGEP,GASP,GRPIP,JWMNP&key=416ac733e884381d5fc80215dc879af0edb1dd8b'
+    get_url <- httr::GET(num_api)
+    parsed_url <- fromJSON(rawToChar(get_url$content))
+    num_tibble <- as_tibble(parsed_url)
+  }else if(2022){
+    num_api <- 'api.census.gov/data/2022/acs/acs1/pums?get=AGEP,GASP,GRPIP,JWMNP&key=416ac733e884381d5fc80215dc879af0edb1dd8b'
+    get_url <- httr::GET(num_api)
+    parsed_url <- fromJSON(rawToChar(get_url$content))
+    num_tibble <- as_tibble(parsed_url)
+  }else if(2023){
+    num_api <- 'api.census.gov/data/2023/acs/acs1/pums?get=AGEP,GASP,GRPIP,JWMNP&key=416ac733e884381d5fc80215dc879af0edb1dd8b'
+    get_url <- httr::GET(num_api)
+    parsed_url <- fromJSON(rawToChar(get_url$content))
+    num_tibble <- as_tibble(parsed_url)
+  }else if(2024){
+    num_api <- 'api.census.gov/data/2024/acs/acs1/pums?get=AGEP,GASP,GRPIP,JWMNP&key=416ac733e884381d5fc80215dc879af0edb1dd8b'
+    get_url <- httr::GET(num_api)
+    parsed_url <- fromJSON(rawToChar(get_url$content))
+    num_tibble <- as_tibble(parsed_url)
+  }
+ 
+}
 
 ```
 
 *Writing functions to specify categorical variables to be returned.*
 
 ```{r}
+return_cat_vars <- function(year_of_survey){
+  year_of_survey <- c(2021,2022,2023,2024)
+  if(2021){
+    readRDS('2021_variables.rds')
+    FER <- mutate(map(variables_2021$variables$FER, as.factor))
+    HHL <- mutate(map(variables_2021$variables$HHL, as.factor))
+    SCH <- mutate(map(variables_2021$variables$SCH, as.factor))
+    SCHL <- mutate(map(variables_2021$variables$SCHL, as.factor))
+    SEX <- mutate(map(variables_2021$variables$SEX, as.factor))
+    return(list(FER = FER, HHL = HHL, SCH = SCH, SCHL = SCHL, SEX = SEX))
+  }else if(2022){
+    readRDS('2022_variables.rds')
+    FER <- as_factor(variables_2022$variables$FER)
+    HHL <- as_factor(variables_2022$variables$HHL)
+    SCH <- as_factor(variables_2022$variables$SCH)
+    SCHL <- as_factor(variables_2022$variables$SCHL)
+    SEX <- as_factor(variables_2022$variables$SEX)
+    return(list(FER = FER, HHL = HHL, SCH = SCH, SCHL = SCHL, SEX = SEX))
+  }else if(2023){
+    readRDS('2023_variables.rds')
+    FER <- as_factor(variables_2023$variables$FER)
+    HHL <- as_factor(variables_2023$variables$HHL)
+    SCH <- as_factor(variables_2023$variables$SCH)
+    SCHL <- as_factor(variables_2023$variables$SCHL)
+    SEX <- as_factor(variables_2023$variables$SEX)
+    return(list(FER = FER, HHL = HHL, SCH = SCH, SCHL = SCHL, SEX = SEX))
+  }else if(2024){
+    readRDS('2024_variables.rds')
+    FER <- as_factor(variables_2024$variables$FER)
+    HHL <- as_factor(variables_2024$variables$HHL)
+    SCH <- as_factor(variables_2024$variables$SCH)
+    SCHL <- as_factor(variables_2024$variables$SCHL)
+    SEX <- as_factor(variables_2024$variables$SEX)
+    return(list(FER = FER, HHL = HHL, SCH = SCH, SCHL = SCHL, SEX = SEX))
+  }else{
+    'ERROR'
+  }
+}
 
+test_cat_vars <- return_cat_vars(2021)
 ```
 
-*Writing function to specify geography level.*
+*Writing function to specify geography level. (function works, no editing needed, remove note later)*
 
 ```{r}
+geography_level <- function(year_geo){
+ year_geo <- c(2021, 2022, 2023, 2024)
+ if(2021){
+   geo_api <- 'api.census.gov/data/2021/acs/acs1/pums?get=ST,REGION,DIVISION&key=416ac733e884381d5fc80215dc879af0edb1dd8b'
+   geo_url <- httr::GET(geo_api)
+   geo_parsed <- fromJSON(rawToChar(geo_url$content))
+   geo_tibble <- as_tibble(geo_parsed)
+   return(geo_tibble)
+ }else if(2022){
+   geo_api <- 'api.census.gov/data/2022/acs/acs1/pums?get=ST,REGION,DIVISION&key=416ac733e884381d5fc80215dc879af0edb1dd8b'
+   geo_url <- httr::GET(geo_api)
+   geo_parsed <- fromJSON(rawToChar(geo_url$content))
+   geo_tibble <- as_tibble(geo_parsed)
+   return(geo_tibble)
+ }else if(2023){
+   geo_api <- 'api.census.gov/data/2023/acs/acs1/pums?get=STATE,REGION,DIVISION&key=416ac733e884381d5fc80215dc879af0edb1dd8b'
+   geo_url <- httr::GET(geo_api)
+   geo_parsed <- fromJSON(rawToChar(geo_url$content))
+   geo_tibble <- as_tibble(geo_parsed)
+   return(geo_tibble)
+ }else if(2024){
+   geo_api <- 'api.census.gov/data/2024/acs/acs1/pums?get=STATE,REGION,DIVISION&key=416ac733e884381d5fc80215dc879af0edb1dd8b'
+   geo_url <- httr::GET(geo_api)
+   geo_parsed <- fromJSON(rawToChar(geo_url$content))
+   geo_tibble <- as_tibble(geo_parsed)
+   return(geo_tibble)
+ }else{
+   'ERROR'
+ }
+}
 
+test_geo <- geography_level(2021)
+test_geo
 ```
 
 *Writing function to specify region, division, or state to subset data on.*
 
 ```{r}
-
+#Default values: Region = South, Division = Puerto Rico, State = 'North Carolina/NC'
 ```
 
 ## COMBINING YEARS
@@ -123,7 +373,14 @@ test_24$variables$SEX
 ## NUMERIC SUMMARIES
 
 ```{r}
-
+summary.census <- function(tibble, numeric_vector, weight_vector){
+  tibble <- 'put tibble here'
+  numeric_vector <- 'put numeric vector here'
+  weight_vector <- 'put weight vector here'
+  sample_mean <- sum(numeric_vector*weight_vector)/sum(weight_vector)
+  sample_std_dev <- sqrt(sum(numeric_vectorˆ2*weight_vector)/sum(weight_vector)-sample_meanˆ2)
+  return(list(sample_mean, sample_std_dev))
+}
 ```
 
 ## GRAPHICAL SUMMARIES
