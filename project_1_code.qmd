@@ -141,11 +141,11 @@ parsed_tibble_24 <- helper_24(pums_data_24)
 str(parsed_tibble_24)
 ```
 
-*Writing function that allows user to change year of survey. This function takes a long time to run and returns a lot of data. The example at the bottom uses str() to reduce the amount of information returned. (function works, no editing needed, remove note later)*
+*Writing function that allows user to change year of survey. This function takes a long time to run and returns a lot of data. The example at the bottom uses str() to reduce the amount of information returned. (function works, remove note later)*
 
 ```{r}
 #Writing function to return year of survey
-return_date <- function(year_vector){
+return_date <- function(year_vector = 2024){
   year_vector <- c(2021, 2022, 2023, 2024)
   if(2021){
     api_2021 <- 'api.census.gov/data/2021/acs/acs1/pums?get=AGEP,GRPIP,JWAP,JWDP,JWMNP,PWGTP,FER,HHL,SCH,SCHL,SEX,ST,REGION,DIVISION&key=416ac733e884381d5fc80215dc879af0edb1dd8b'
@@ -181,139 +181,76 @@ str(test_date)
 *Writing functions to specify numeric variables to be returned*. (function still needs to be worked on)
 
 ```{r}
-return_time_variable <- function(year_of_survey){
-  year_of_survey <- list(2021, 2022, 2023, 2024)
-  if(2021){
-    readRDS('2021_variables.rds')
-    time_JWAP <- as.numeric(variables_2021$variables$JWAP)
-    JWAP_clean <- time_JWAP[!is.na(time_JWAP)]
-    time_JWDP <- as.numeric(variables_2021$variables$JWDP)
-    JWDP_clean <- time_JWDP[!is.na(time_JWDP)]
-    JWAP_midpoint <- lapply(X = JWAP_clean, FUN = mean.difftime, na.rm = TRUE)
-    JWDP_midpoint <- lapply(X = JWDP_clean, FUN = mean.difftime, na.rm = TRUE)
-    JWAP_time <- hms(JWAP_midpoint)
-    JWDP_time <- hms(JWDP_midpoint)
-    return(list(JWAP = JWAP_time, JWDP = JWDP_time))
-  }else if(2022){
-    readRDS('2022_variables.rds')
-    time_JWAP <- as.numeric(variables_2022$variables$JWAP)
-    JWAP_clean <- time_JWAP[!is.na(time_JWAP)]
-    time_JWDP <- as.numeric(variables_2022$variables$JWDP)
-    JWDP_clean <- time_JWDP[!is.na(time_JWDP)]
-    JWAP_midpoint <- lapply(X = JWAP_clean, FUN = mean.difftime, na.rm = TRUE)
-    JWDP_midpoint <- lapply(X = JWDP_clean, FUN = mean.difftime, na.rm = TRUE)
-    JWAP_time <- hms(JWAP_midpoint)
-    JWDP_time <- hms(JWDP_midpoint)
-    return(list(JWAP = JWAP_time, JWDP = JWDP_time))
-  }else if(2023){
-    readRDS('2023_variables.rds')
-    time_JWAP <- as.numeric(variables_2023$variables$JWAP)
-    JWAP_clean <- time_JWAP[!is.na(time_JWAP)]
-    time_JWDP <- as.numeric(variables_2023$variables$JWDP)
-    JWDP_clean <- time_JWDP[!is.na(time_JWDP)]
-    JWAP_midpoint <- lapply(X = JWAP_clean, FUN = mean.difftime, na.rm = TRUE)
-    JWDP_midpoint <- lapply(X = JWDP_clean, FUN = mean.difftime, na.rm = TRUE)
-    JWAP_time <- hms(JWAP_midpoint)
-    JWDP_time <- hms(JWDP_midpoint)
-    return(list(JWAP = JWAP_time, JWDP = JWDP_time))
-  }else if(2024){
-    readRDS('2024_variables.rds')
-    time_JWAP <- as.numeric(variables_2024$variables$JWAP)
-    JWAP_clean <- time_JWAP[!is.na(time_JWAP)]
-    time_JWDP <- as.numeric(variables_2024$variables$JWDP)
-    JWDP_clean <- time_JWDP[!is.na(time_JWDP)]
-    JWAP_midpoint <- lapply(X = JWAP_clean, FUN = mean.difftime, na.rm = TRUE)
-    JWDP_midpoint <- lapply(X = JWDP_clean, FUN = mean.difftime, na.rm = TRUE)
-    JWAP_time <- hms(JWAP_midpoint)
-    JWDP_time <- hms(JWDP_midpoint)
-    return(list(JWAP = JWAP_midpoint, JWDP = JWDP_midpoint))
-  }else{
-    'ERROR'
-  }
-}
-
-test_time_24 <- return_time_variable(2024)
-test_time_24
-```
-
-```{r}
-test_num <- httr::GET('api.census.gov/data/2021/acs/acs1/pums?get=AGEP,GASP,GRPIP,JWMNP&key=416ac733e884381d5fc80215dc879af0edb1dd8b')
-parsed_test <- fromJSON(rawToChar(test_num$content))
-tibble_test <- as_tibble(parsed_test)
-```
-
-```{r}
-return_num_variable <- function(year_of_survey){
-  year_of_survey <- c(2021, 2022, 2023, 2024)
-  if(2021){
-    num_api <- 'api.census.gov/data/2021/acs/acs1/pums?get=AGEP,GASP,GRPIP,JWMNP&key=416ac733e884381d5fc80215dc879af0edb1dd8b'
-    get_url <- httr::GET(num_api)
-    parsed_url <- fromJSON(rawToChar(get_url$content))
-    num_tibble <- as_tibble(parsed_url)
-  }else if(2022){
-    num_api <- 'api.census.gov/data/2022/acs/acs1/pums?get=AGEP,GASP,GRPIP,JWMNP&key=416ac733e884381d5fc80215dc879af0edb1dd8b'
-    get_url <- httr::GET(num_api)
-    parsed_url <- fromJSON(rawToChar(get_url$content))
-    num_tibble <- as_tibble(parsed_url)
-  }else if(2023){
-    num_api <- 'api.census.gov/data/2023/acs/acs1/pums?get=AGEP,GASP,GRPIP,JWMNP&key=416ac733e884381d5fc80215dc879af0edb1dd8b'
-    get_url <- httr::GET(num_api)
-    parsed_url <- fromJSON(rawToChar(get_url$content))
-    num_tibble <- as_tibble(parsed_url)
-  }else if(2024){
-    num_api <- 'api.census.gov/data/2024/acs/acs1/pums?get=AGEP,GASP,GRPIP,JWMNP&key=416ac733e884381d5fc80215dc879af0edb1dd8b'
-    get_url <- httr::GET(num_api)
-    parsed_url <- fromJSON(rawToChar(get_url$content))
-    num_tibble <- as_tibble(parsed_url)
-  }
- 
-}
 
 ```
 
-*Writing functions to specify categorical variables to be returned. (functions still need to be worked on)*
+```{r}
+
+```
+
+*Writing functions to specify categorical variables to be returned. (function works but needs editing to fit task)*
 
 ```{r}
+
 return_cat_vars <- function(year_of_survey){
   year_of_survey <- c(2021,2022,2023,2024)
   if(2021){
-    readRDS('2021_variables.rds')
-    FER <- mutate(map(variables_2021$variables$FER, as.factor))
-    HHL <- mutate(map(variables_2021$variables$HHL, as.factor))
-    SCH <- mutate(map(variables_2021$variables$SCH, as.factor))
-    SCHL <- mutate(map(variables_2021$variables$SCHL, as.factor))
-    SEX <- mutate(map(variables_2021$variables$SEX, as.factor))
-    return(list(FER = FER, HHL = HHL, SCH = SCH, SCHL = SCHL, SEX = SEX))
+    vars_2021 <- readRDS('2021_variables.rds')
+    FER <- factor(unlist(vars_2021$variables$FER))
+    HHL <- factor(unlist(vars_2021$variables$HHL))
+    SCH <- factor(unlist(vars_2021$variables$SCH))
+    SCHL <- factor(unlist(vars_2021$variables$SCHL))
+    SEX <- factor(unlist(vars_2021$variables$SEX))
+    return()
   }else if(2022){
     readRDS('2022_variables.rds')
-    FER <- as_factor(variables_2022$variables$FER)
-    HHL <- as_factor(variables_2022$variables$HHL)
-    SCH <- as_factor(variables_2022$variables$SCH)
-    SCHL <- as_factor(variables_2022$variables$SCHL)
-    SEX <- as_factor(variables_2022$variables$SEX)
-    return(list(FER = FER, HHL = HHL, SCH = SCH, SCHL = SCHL, SEX = SEX))
+    FER <- factor(unlist(variables_2022$variables$FER))
+    HHL <- factor(unlist(variables_2022$variables$HHL))
+    SCH <- factor(unlist(variables_2022$variables$SCH))
+    SCHL <- factor(unlist(variables_2022$variables$SCHL))
+    SEX <- factor(unlist(variables_2022$variables$SEX))
+    return()
   }else if(2023){
     readRDS('2023_variables.rds')
-    FER <- as_factor(variables_2023$variables$FER)
-    HHL <- as_factor(variables_2023$variables$HHL)
-    SCH <- as_factor(variables_2023$variables$SCH)
-    SCHL <- as_factor(variables_2023$variables$SCHL)
-    SEX <- as_factor(variables_2023$variables$SEX)
-    return(list(FER = FER, HHL = HHL, SCH = SCH, SCHL = SCHL, SEX = SEX))
+    FER <- factor(unlist(variables_2023$variables$FER))
+    HHL <- factor(unlist(variables_2023$variables$HHL))
+    SCH <- factor(unlist(variables_2023$variables$SCH))
+    SCHL <- factor(unlist(ariables_2023$variables$SCHL))
+    SEX <- factor(unlist(variables_2023$variables$SEX))
+    return()
   }else if(2024){
     readRDS('2024_variables.rds')
-    FER <- as_factor(variables_2024$variables$FER)
-    HHL <- as_factor(variables_2024$variables$HHL)
-    SCH <- as_factor(variables_2024$variables$SCH)
-    SCHL <- as_factor(variables_2024$variables$SCHL)
-    SEX <- as_factor(variables_2024$variables$SEX)
-    return(list(FER = FER, HHL = HHL, SCH = SCH, SCHL = SCHL, SEX = SEX))
+    FER <- factor(unlist(variables_2024$variables$FER))
+    HHL <- factor(unlist(variables_2024$variables$HHL))
+    SCH <- factor(unlist(variables_2024$variables$SCH))
+    SCHL <- factor(unlist(variables_2024$variables$SCHL))
+    SEX <- factor(unlist(variables_2024$variables$SEX))
+    return()
   }else{
     'ERROR'
   }
 }
 
 test_cat_vars <- return_cat_vars(2021)
+test_cat_vars
+```
+
+```{r}
+test_list <- list(12, 3, 9, 55)
+test_function <- function(date,test_list = 55){
+  date <- c(2000, 2001, 2002)
+  if(2000){
+    return(test_list)
+  }else if(2001){
+    return(test_list)
+  }else if(2002){
+    return(test_list)
+  }else{
+    'ERROR'
+  }
+}
+
+test_function(2000, test_list = 12)
 ```
 
 *Writing function to specify geography level. (function works, no editing needed, remove note later)*
@@ -373,14 +310,7 @@ test_geo
 ## NUMERIC SUMMARIES
 
 ```{r}
-summary.census <- function(tibble, numeric_vector, weight_vector){
-  tibble <- 'put tibble here'
-  numeric_vector <- 'put numeric vector here'
-  weight_vector <- 'put weight vector here'
-  sample_mean <- sum(numeric_vector*weight_vector)/sum(weight_vector)
-  sample_std_dev <- sqrt(sum(numeric_vectorˆ2*weight_vector)/sum(weight_vector)-sample_meanˆ2)
-  return(list(sample_mean, sample_std_dev))
-}
+
 ```
 
 ## GRAPHICAL SUMMARIES
