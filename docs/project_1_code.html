@@ -609,7 +609,7 @@ $values$item$`2`
  $ V14: chr [1:3422889] "DIVISION" "9" "5" "2" ...</code></pre>
 </div>
 </div>
-<p><em>Writing function that allows user to change year of survey. This function takes a long time to run and returns a lot of data. The example at the bottom uses str() to reduce the amount of information returned. (function works, remove note later)</em></p>
+<p><em>Writing function that allows user to change year of survey. This function takes a long time to run and returns a lot of data. The example at the bottom uses str() to reduce the amount of information returned.</em></p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Writing function to return year of survey</span></span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>return_date <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">year_vector =</span> <span class="dv">2024</span>){</span>
@@ -662,88 +662,345 @@ $values$item$`2`
 </div>
 </div>
 <p><em>Writing functions to specify numeric variables to be returned</em>. (function still needs to be worked on)</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Numeric functions</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>return_num_vars <span class="ot">&lt;-</span> <span class="cf">function</span>(year_of_survey){</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  year_of_survey <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2021</span>, <span class="dv">2022</span>, <span class="dv">2023</span>, <span class="dv">2024</span>)</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="dv">2021</span>){</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>    variables_2021 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">'2021_variables.rds'</span>)</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>    PWGTP <span class="ot">&lt;-</span> variables_2021<span class="sc">$</span>variables<span class="sc">$</span>PWGTP<span class="sc">$</span>values<span class="sc">$</span>range</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>    AGEP <span class="ot">&lt;-</span> variables_2021<span class="sc">$</span>variables<span class="sc">$</span>AGEP<span class="sc">$</span>values<span class="sc">$</span>range</span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>    GASP <span class="ot">&lt;-</span> variables_2021<span class="sc">$</span>variables<span class="sc">$</span>GASP<span class="sc">$</span>values<span class="sc">$</span>range</span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>    GRPIP <span class="ot">&lt;-</span> variables_2021<span class="sc">$</span>variables<span class="sc">$</span>GRPIP<span class="sc">$</span>values<span class="sc">$</span>range</span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>    JWMNP <span class="ot">&lt;-</span> variables_2021<span class="sc">$</span>variables<span class="sc">$</span>JWMNP<span class="sc">$</span>values<span class="sc">$</span>range</span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>    vars_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(PWGTP, AGEP, GASP, GRPIP, JWMNP)</span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>    numeric_df <span class="ot">&lt;-</span> <span class="fu">lapply</span>(vars_df, as.numeric)</span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>    numeric_tibble <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(numeric_df)</span>
+<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(numeric_tibble)</span>
+<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span> <span class="cf">if</span>(<span class="dv">2022</span>){</span>
+<span id="cb31-16"><a href="#cb31-16" aria-hidden="true" tabindex="-1"></a>    variables_2022 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">'2022_variables.rds'</span>)</span>
+<span id="cb31-17"><a href="#cb31-17" aria-hidden="true" tabindex="-1"></a>    PWGTP <span class="ot">&lt;-</span> variables_2022<span class="sc">$</span>variables<span class="sc">$</span>PWGTP<span class="sc">$</span>values<span class="sc">$</span>range</span>
+<span id="cb31-18"><a href="#cb31-18" aria-hidden="true" tabindex="-1"></a>    AGEP <span class="ot">&lt;-</span> variables_2022<span class="sc">$</span>variables<span class="sc">$</span>AGEP<span class="sc">$</span>values<span class="sc">$</span>range</span>
+<span id="cb31-19"><a href="#cb31-19" aria-hidden="true" tabindex="-1"></a>    GASP <span class="ot">&lt;-</span> variables_2022<span class="sc">$</span>variables<span class="sc">$</span>GASP<span class="sc">$</span>values<span class="sc">$</span>range</span>
+<span id="cb31-20"><a href="#cb31-20" aria-hidden="true" tabindex="-1"></a>    GRPIP <span class="ot">&lt;-</span> variables_2022<span class="sc">$</span>variables<span class="sc">$</span>GRPIP<span class="sc">$</span>values<span class="sc">$</span>range</span>
+<span id="cb31-21"><a href="#cb31-21" aria-hidden="true" tabindex="-1"></a>    JWMNP <span class="ot">&lt;-</span> variables_2022<span class="sc">$</span>variables<span class="sc">$</span>JWMNP<span class="sc">$</span>values<span class="sc">$</span>range</span>
+<span id="cb31-22"><a href="#cb31-22" aria-hidden="true" tabindex="-1"></a>    vars_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(PWGTP, AGEP, GASP, GRPIP, JWMNP)</span>
+<span id="cb31-23"><a href="#cb31-23" aria-hidden="true" tabindex="-1"></a>    numeric_df <span class="ot">&lt;-</span> <span class="fu">lapply</span>(vars_df, as.numeric)</span>
+<span id="cb31-24"><a href="#cb31-24" aria-hidden="true" tabindex="-1"></a>    numeric_tibble <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(numeric_df)</span>
+<span id="cb31-25"><a href="#cb31-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(numeric_tibble)</span>
+<span id="cb31-26"><a href="#cb31-26" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span> <span class="cf">if</span>(<span class="dv">2023</span>){</span>
+<span id="cb31-27"><a href="#cb31-27" aria-hidden="true" tabindex="-1"></a>    variables_2023 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">'2023_variables.rds'</span>)</span>
+<span id="cb31-28"><a href="#cb31-28" aria-hidden="true" tabindex="-1"></a>    PWGTP <span class="ot">&lt;-</span> variables_2023<span class="sc">$</span>variables<span class="sc">$</span>PWGTP<span class="sc">$</span>values<span class="sc">$</span>range</span>
+<span id="cb31-29"><a href="#cb31-29" aria-hidden="true" tabindex="-1"></a>    AGEP <span class="ot">&lt;-</span> variables_2023<span class="sc">$</span>variables<span class="sc">$</span>AGEP<span class="sc">$</span>values<span class="sc">$</span>range</span>
+<span id="cb31-30"><a href="#cb31-30" aria-hidden="true" tabindex="-1"></a>    GASP <span class="ot">&lt;-</span> variables_2023<span class="sc">$</span>variables<span class="sc">$</span>GASP<span class="sc">$</span>values<span class="sc">$</span>range</span>
+<span id="cb31-31"><a href="#cb31-31" aria-hidden="true" tabindex="-1"></a>    GRPIP <span class="ot">&lt;-</span> variables_2023<span class="sc">$</span>variables<span class="sc">$</span>GRPIP<span class="sc">$</span>values<span class="sc">$</span>range</span>
+<span id="cb31-32"><a href="#cb31-32" aria-hidden="true" tabindex="-1"></a>    JWMNP <span class="ot">&lt;-</span> variables_2023<span class="sc">$</span>variables<span class="sc">$</span>JWMNP<span class="sc">$</span>values<span class="sc">$</span>range</span>
+<span id="cb31-33"><a href="#cb31-33" aria-hidden="true" tabindex="-1"></a>    vars_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(PWGTP, AGEP, GASP, GRPIP, JWMNP)</span>
+<span id="cb31-34"><a href="#cb31-34" aria-hidden="true" tabindex="-1"></a>    numeric_df <span class="ot">&lt;-</span> <span class="fu">lapply</span>(vars_df, as.numeric)</span>
+<span id="cb31-35"><a href="#cb31-35" aria-hidden="true" tabindex="-1"></a>    numeric_tibble <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(numeric_df)</span>
+<span id="cb31-36"><a href="#cb31-36" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(numeric_tibble)</span>
+<span id="cb31-37"><a href="#cb31-37" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span> <span class="cf">if</span>(<span class="dv">2024</span>){</span>
+<span id="cb31-38"><a href="#cb31-38" aria-hidden="true" tabindex="-1"></a>    variables_2024 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">'2024_variables.rds'</span>)</span>
+<span id="cb31-39"><a href="#cb31-39" aria-hidden="true" tabindex="-1"></a>    PWGTP <span class="ot">&lt;-</span> variables_2024<span class="sc">$</span>variables<span class="sc">$</span>PWGTP<span class="sc">$</span>values<span class="sc">$</span>range</span>
+<span id="cb31-40"><a href="#cb31-40" aria-hidden="true" tabindex="-1"></a>    AGEP <span class="ot">&lt;-</span> variables_2024<span class="sc">$</span>variables<span class="sc">$</span>AGEP<span class="sc">$</span>values<span class="sc">$</span>range</span>
+<span id="cb31-41"><a href="#cb31-41" aria-hidden="true" tabindex="-1"></a>    GASP <span class="ot">&lt;-</span> variables_2024<span class="sc">$</span>variables<span class="sc">$</span>GASP<span class="sc">$</span>values<span class="sc">$</span>range</span>
+<span id="cb31-42"><a href="#cb31-42" aria-hidden="true" tabindex="-1"></a>    GRPIP <span class="ot">&lt;-</span> variables_2024<span class="sc">$</span>variables<span class="sc">$</span>GRPIP<span class="sc">$</span>values<span class="sc">$</span>range</span>
+<span id="cb31-43"><a href="#cb31-43" aria-hidden="true" tabindex="-1"></a>    JWMNP <span class="ot">&lt;-</span> variables_2024<span class="sc">$</span>variables<span class="sc">$</span>JWMNP<span class="sc">$</span>values<span class="sc">$</span>range</span>
+<span id="cb31-44"><a href="#cb31-44" aria-hidden="true" tabindex="-1"></a>    vars_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(PWGTP, AGEP, GASP, GRPIP, JWMNP)</span>
+<span id="cb31-45"><a href="#cb31-45" aria-hidden="true" tabindex="-1"></a>    numeric_df <span class="ot">&lt;-</span> <span class="fu">lapply</span>(vars_df, as.numeric)</span>
+<span id="cb31-46"><a href="#cb31-46" aria-hidden="true" tabindex="-1"></a>    numeric_tibble <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(numeric_df)</span>
+<span id="cb31-47"><a href="#cb31-47" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(numeric_tibble)</span>
+<span id="cb31-48"><a href="#cb31-48" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span>{</span>
+<span id="cb31-49"><a href="#cb31-49" aria-hidden="true" tabindex="-1"></a>    <span class="st">'ERROR'</span></span>
+<span id="cb31-50"><a href="#cb31-50" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb31-51"><a href="#cb31-51" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>CAUSED WHITE SCREEN, AVOID UNTIL FURTHER NOTICE</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(hms)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'hms'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:lubridate':
+
+    hms</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>test_time <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">'2021_variables.rds'</span>)</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>test_col <span class="ot">&lt;-</span> test_time<span class="sc">$</span>variables<span class="sc">$</span>JWAP<span class="sc">$</span>values<span class="sc">$</span>item[<span class="dv">1</span>]</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>clean_time <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">'to|</span><span class="sc">\\</span><span class="st">a.m.|</span><span class="sc">\\</span><span class="st">p.m.|</span><span class="sc">\\</span><span class="st">:|</span><span class="sc">\\</span><span class="st"> '</span>, <span class="st">''</span>, test_col)</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>split_1 <span class="ot">&lt;-</span> <span class="fu">str_sub</span>(clean_time, <span class="at">start =</span> <span class="dv">1</span>, <span class="at">end =</span> <span class="dv">3</span>)</span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>split_1</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "635"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>split_2 <span class="ot">&lt;-</span> <span class="fu">str_sub</span>(clean_time, <span class="at">start =</span> <span class="dv">4</span>, <span class="at">end =</span> <span class="dv">6</span>)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>split_2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "639"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>num_1 <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(split_1)</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>num_1</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 635</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>num_2 <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(split_2)</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>num_2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 639</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>num_vec <span class="ot">&lt;-</span> <span class="fu">c</span>(num_1, num_2)</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>mean <span class="ot">&lt;-</span> <span class="fu">mean</span>(num_vec)</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>mean</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 637</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>time <span class="ot">&lt;-</span> <span class="fu">as.POSIXct</span>(<span class="fu">sprintf</span>(<span class="st">'%04d'</span>, mean), <span class="at">format =</span> <span class="st">'%H%M'</span>)</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>time</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "2026-10-03 06:37:00 EDT"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>new_time <span class="ot">&lt;-</span> <span class="fu">format</span>(time, <span class="at">format =</span> <span class="st">'%H:%M'</span>)</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>new_time</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "06:37"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co">#This does work! Use this as a reference</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 <p><em>Writing functions to specify categorical variables to be returned. (function works but needs editing to fit task)</em></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>return_cat_vars <span class="ot">&lt;-</span> <span class="cf">function</span>(year_of_survey){</span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  year_of_survey <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2021</span>,<span class="dv">2022</span>,<span class="dv">2023</span>,<span class="dv">2024</span>)</span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="dv">2021</span>){</span>
-<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>    vars_2021 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">'2021_variables.rds'</span>)</span>
-<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>    FER <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">unlist</span>(vars_2021<span class="sc">$</span>variables<span class="sc">$</span>FER))</span>
-<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>    HHL <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">unlist</span>(vars_2021<span class="sc">$</span>variables<span class="sc">$</span>HHL))</span>
-<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>    SCH <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">unlist</span>(vars_2021<span class="sc">$</span>variables<span class="sc">$</span>SCH))</span>
-<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>    SCHL <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">unlist</span>(vars_2021<span class="sc">$</span>variables<span class="sc">$</span>SCHL))</span>
-<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>    SEX <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">unlist</span>(vars_2021<span class="sc">$</span>variables<span class="sc">$</span>SEX))</span>
-<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>()</span>
-<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span> <span class="cf">if</span>(<span class="dv">2022</span>){</span>
-<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">readRDS</span>(<span class="st">'2022_variables.rds'</span>)</span>
-<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>    FER <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">unlist</span>(variables_2022<span class="sc">$</span>variables<span class="sc">$</span>FER))</span>
-<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a>    HHL <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">unlist</span>(variables_2022<span class="sc">$</span>variables<span class="sc">$</span>HHL))</span>
-<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a>    SCH <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">unlist</span>(variables_2022<span class="sc">$</span>variables<span class="sc">$</span>SCH))</span>
-<span id="cb31-16"><a href="#cb31-16" aria-hidden="true" tabindex="-1"></a>    SCHL <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">unlist</span>(variables_2022<span class="sc">$</span>variables<span class="sc">$</span>SCHL))</span>
-<span id="cb31-17"><a href="#cb31-17" aria-hidden="true" tabindex="-1"></a>    SEX <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">unlist</span>(variables_2022<span class="sc">$</span>variables<span class="sc">$</span>SEX))</span>
-<span id="cb31-18"><a href="#cb31-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>()</span>
-<span id="cb31-19"><a href="#cb31-19" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span> <span class="cf">if</span>(<span class="dv">2023</span>){</span>
-<span id="cb31-20"><a href="#cb31-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">readRDS</span>(<span class="st">'2023_variables.rds'</span>)</span>
-<span id="cb31-21"><a href="#cb31-21" aria-hidden="true" tabindex="-1"></a>    FER <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">unlist</span>(variables_2023<span class="sc">$</span>variables<span class="sc">$</span>FER))</span>
-<span id="cb31-22"><a href="#cb31-22" aria-hidden="true" tabindex="-1"></a>    HHL <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">unlist</span>(variables_2023<span class="sc">$</span>variables<span class="sc">$</span>HHL))</span>
-<span id="cb31-23"><a href="#cb31-23" aria-hidden="true" tabindex="-1"></a>    SCH <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">unlist</span>(variables_2023<span class="sc">$</span>variables<span class="sc">$</span>SCH))</span>
-<span id="cb31-24"><a href="#cb31-24" aria-hidden="true" tabindex="-1"></a>    SCHL <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">unlist</span>(ariables_2023<span class="sc">$</span>variables<span class="sc">$</span>SCHL))</span>
-<span id="cb31-25"><a href="#cb31-25" aria-hidden="true" tabindex="-1"></a>    SEX <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">unlist</span>(variables_2023<span class="sc">$</span>variables<span class="sc">$</span>SEX))</span>
-<span id="cb31-26"><a href="#cb31-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>()</span>
-<span id="cb31-27"><a href="#cb31-27" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span> <span class="cf">if</span>(<span class="dv">2024</span>){</span>
-<span id="cb31-28"><a href="#cb31-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">readRDS</span>(<span class="st">'2024_variables.rds'</span>)</span>
-<span id="cb31-29"><a href="#cb31-29" aria-hidden="true" tabindex="-1"></a>    FER <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">unlist</span>(variables_2024<span class="sc">$</span>variables<span class="sc">$</span>FER))</span>
-<span id="cb31-30"><a href="#cb31-30" aria-hidden="true" tabindex="-1"></a>    HHL <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">unlist</span>(variables_2024<span class="sc">$</span>variables<span class="sc">$</span>HHL))</span>
-<span id="cb31-31"><a href="#cb31-31" aria-hidden="true" tabindex="-1"></a>    SCH <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">unlist</span>(variables_2024<span class="sc">$</span>variables<span class="sc">$</span>SCH))</span>
-<span id="cb31-32"><a href="#cb31-32" aria-hidden="true" tabindex="-1"></a>    SCHL <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">unlist</span>(variables_2024<span class="sc">$</span>variables<span class="sc">$</span>SCHL))</span>
-<span id="cb31-33"><a href="#cb31-33" aria-hidden="true" tabindex="-1"></a>    SEX <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">unlist</span>(variables_2024<span class="sc">$</span>variables<span class="sc">$</span>SEX))</span>
-<span id="cb31-34"><a href="#cb31-34" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>()</span>
-<span id="cb31-35"><a href="#cb31-35" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span>{</span>
-<span id="cb31-36"><a href="#cb31-36" aria-hidden="true" tabindex="-1"></a>    <span class="st">'ERROR'</span></span>
-<span id="cb31-37"><a href="#cb31-37" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb31-38"><a href="#cb31-38" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb31-39"><a href="#cb31-39" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-40"><a href="#cb31-40" aria-hidden="true" tabindex="-1"></a>test_cat_vars <span class="ot">&lt;-</span> <span class="fu">return_cat_vars</span>(<span class="dv">2021</span>)</span>
-<span id="cb31-41"><a href="#cb31-41" aria-hidden="true" tabindex="-1"></a>test_cat_vars</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>return_cat_vars <span class="ot">&lt;-</span> <span class="cf">function</span>(year_of_survey){</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>  year_of_survey <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2021</span>,<span class="dv">2022</span>,<span class="dv">2023</span>,<span class="dv">2024</span>)</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="dv">2021</span>){</span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>    vars_2021 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">'2021_variables.rds'</span>)</span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>    FER <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">unlist</span>(vars_2021<span class="sc">$</span>variables<span class="sc">$</span>FER))</span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>    HHL <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">unlist</span>(vars_2021<span class="sc">$</span>variables<span class="sc">$</span>HHL))</span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>    SCH <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">unlist</span>(vars_2021<span class="sc">$</span>variables<span class="sc">$</span>SCH))</span>
+<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a>    SCHL <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">unlist</span>(vars_2021<span class="sc">$</span>variables<span class="sc">$</span>SCHL))</span>
+<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a>    SEX <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">unlist</span>(vars_2021<span class="sc">$</span>variables<span class="sc">$</span>SEX))</span>
+<span id="cb50-10"><a href="#cb50-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="fu">list</span>(FER, HHL, SCH, SCHL, SEX))</span>
+<span id="cb50-11"><a href="#cb50-11" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span> <span class="cf">if</span>(<span class="dv">2022</span>){</span>
+<span id="cb50-12"><a href="#cb50-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">readRDS</span>(<span class="st">'2022_variables.rds'</span>)</span>
+<span id="cb50-13"><a href="#cb50-13" aria-hidden="true" tabindex="-1"></a>    FER <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">unlist</span>(variables_2022<span class="sc">$</span>variables<span class="sc">$</span>FER))</span>
+<span id="cb50-14"><a href="#cb50-14" aria-hidden="true" tabindex="-1"></a>    HHL <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">unlist</span>(variables_2022<span class="sc">$</span>variables<span class="sc">$</span>HHL))</span>
+<span id="cb50-15"><a href="#cb50-15" aria-hidden="true" tabindex="-1"></a>    SCH <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">unlist</span>(variables_2022<span class="sc">$</span>variables<span class="sc">$</span>SCH))</span>
+<span id="cb50-16"><a href="#cb50-16" aria-hidden="true" tabindex="-1"></a>    SCHL <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">unlist</span>(variables_2022<span class="sc">$</span>variables<span class="sc">$</span>SCHL))</span>
+<span id="cb50-17"><a href="#cb50-17" aria-hidden="true" tabindex="-1"></a>    SEX <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">unlist</span>(variables_2022<span class="sc">$</span>variables<span class="sc">$</span>SEX))</span>
+<span id="cb50-18"><a href="#cb50-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="fu">list</span>(FER, HHL, SCH, SCHL, SEX))</span>
+<span id="cb50-19"><a href="#cb50-19" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span> <span class="cf">if</span>(<span class="dv">2023</span>){</span>
+<span id="cb50-20"><a href="#cb50-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">readRDS</span>(<span class="st">'2023_variables.rds'</span>)</span>
+<span id="cb50-21"><a href="#cb50-21" aria-hidden="true" tabindex="-1"></a>    FER <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">unlist</span>(variables_2023<span class="sc">$</span>variables<span class="sc">$</span>FER))</span>
+<span id="cb50-22"><a href="#cb50-22" aria-hidden="true" tabindex="-1"></a>    HHL <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">unlist</span>(variables_2023<span class="sc">$</span>variables<span class="sc">$</span>HHL))</span>
+<span id="cb50-23"><a href="#cb50-23" aria-hidden="true" tabindex="-1"></a>    SCH <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">unlist</span>(variables_2023<span class="sc">$</span>variables<span class="sc">$</span>SCH))</span>
+<span id="cb50-24"><a href="#cb50-24" aria-hidden="true" tabindex="-1"></a>    SCHL <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">unlist</span>(ariables_2023<span class="sc">$</span>variables<span class="sc">$</span>SCHL))</span>
+<span id="cb50-25"><a href="#cb50-25" aria-hidden="true" tabindex="-1"></a>    SEX <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">unlist</span>(variables_2023<span class="sc">$</span>variables<span class="sc">$</span>SEX))</span>
+<span id="cb50-26"><a href="#cb50-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="fu">list</span>(FER, HHL, SCH, SCHL, SEX))</span>
+<span id="cb50-27"><a href="#cb50-27" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span> <span class="cf">if</span>(<span class="dv">2024</span>){</span>
+<span id="cb50-28"><a href="#cb50-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">readRDS</span>(<span class="st">'2024_variables.rds'</span>)</span>
+<span id="cb50-29"><a href="#cb50-29" aria-hidden="true" tabindex="-1"></a>    FER <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">unlist</span>(variables_2024<span class="sc">$</span>variables<span class="sc">$</span>FER))</span>
+<span id="cb50-30"><a href="#cb50-30" aria-hidden="true" tabindex="-1"></a>    HHL <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">unlist</span>(variables_2024<span class="sc">$</span>variables<span class="sc">$</span>HHL))</span>
+<span id="cb50-31"><a href="#cb50-31" aria-hidden="true" tabindex="-1"></a>    SCH <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">unlist</span>(variables_2024<span class="sc">$</span>variables<span class="sc">$</span>SCH))</span>
+<span id="cb50-32"><a href="#cb50-32" aria-hidden="true" tabindex="-1"></a>    SCHL <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">unlist</span>(variables_2024<span class="sc">$</span>variables<span class="sc">$</span>SCHL))</span>
+<span id="cb50-33"><a href="#cb50-33" aria-hidden="true" tabindex="-1"></a>    SEX <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">unlist</span>(variables_2024<span class="sc">$</span>variables<span class="sc">$</span>SEX))</span>
+<span id="cb50-34"><a href="#cb50-34" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="fu">list</span>(FER, HHL, SCH, SCHL, SEX))</span>
+<span id="cb50-35"><a href="#cb50-35" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span>{</span>
+<span id="cb50-36"><a href="#cb50-36" aria-hidden="true" tabindex="-1"></a>    <span class="st">'ERROR'</span></span>
+<span id="cb50-37"><a href="#cb50-37" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb50-38"><a href="#cb50-38" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb50-39"><a href="#cb50-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-40"><a href="#cb50-40" aria-hidden="true" tabindex="-1"></a>test_cat_vars <span class="ot">&lt;-</span> <span class="fu">return_cat_vars</span>(<span class="dv">2021</span>)</span>
+<span id="cb50-41"><a href="#cb50-41" aria-hidden="true" tabindex="-1"></a>test_cat_vars</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>NULL</code></pre>
+<pre><code>[[1]]
+                                               label 
+       Gave birth to child within the past 12 months 
+                                       predicateType 
+                                                 int 
+                                               group 
+                                                 N/A 
+                                               limit 
+                                                   0 
+                                    suggested-weight 
+                                               PWGTP 
+                                       values.item.0 
+N/A (less than 15 years/greater than 50 years/ male) 
+                                       values.item.2 
+                                                  No 
+                                       values.item.1 
+                                                 Yes 
+8 Levels: 0 Gave birth to child within the past 12 months int ... Yes
+
+[[2]]
+                             label                      predicateType 
+                Household language                                int 
+                             group                              limit 
+                               N/A                                  0 
+                  suggested-weight                      values.item.0 
+                              WGTP                    N/A (GQ/vacant) 
+                     values.item.2                      values.item.3 
+                           Spanish      Other Indo-European languages 
+                     values.item.1                      values.item.4 
+                      English Only Asian and Pacific Island languages 
+                     values.item.5 
+                    Other Language 
+11 Levels: 0 Asian and Pacific Island languages ... WGTP
+
+[[3]]
+                                        label 
+                            School enrollment 
+                                predicateType 
+                                          int 
+                                        group 
+                                          N/A 
+                                        limit 
+                                            0 
+                             suggested-weight 
+                                        PWGTP 
+                                values.item.0 
+                  N/A (less than 3 years old) 
+                                values.item.3 
+Yes, private school or college or home school 
+                                values.item.1 
+    No, has not attended in the last 3 months 
+                                values.item.2 
+         Yes, public school or public college 
+9 Levels: 0 int N/A ... Yes, public school or public college
+
+[[4]]
+                                         label 
+                        Educational attainment 
+                                 predicateType 
+                                           int 
+                                         group 
+                                           N/A 
+                                         limit 
+                                             0 
+                              suggested-weight 
+                                         PWGTP 
+                                values.item.16 
+                   Regular high school diploma 
+                                values.item.01 
+                        No schooling completed 
+                                values.item.04 
+                                       Grade 1 
+                                values.item.03 
+                                  Kindergarten 
+                                values.item.07 
+                                       Grade 4 
+                                values.item.23 
+Professional degree beyond a bachelor's degree 
+                                values.item.19 
+  1 or more years of college credit, no degree 
+                                values.item.22 
+                               Master's degree 
+                                values.item.10 
+                                       Grade 7 
+                                values.item.20 
+                            Associate's degree 
+                                 values.item.0 
+                   N/A (less than 3 years old) 
+                                values.item.02 
+                     Nursery school, preschool 
+                                values.item.21 
+                             Bachelor's degree 
+                                values.item.08 
+                                       Grade 5 
+                                values.item.24 
+                              Doctorate degree 
+                                values.item.06 
+                                       Grade 3 
+                                values.item.14 
+                                      Grade 11 
+                                values.item.17 
+                 GED or alternative credential 
+                                values.item.12 
+                                       Grade 9 
+                                values.item.15 
+                       12th grade - no diploma 
+                                values.item.13 
+                                      Grade 10 
+                                values.item.05 
+                                       Grade 2 
+                                values.item.11 
+                                       Grade 8 
+                                values.item.18 
+            Some college, but less than 1 year 
+                                values.item.09 
+                                       Grade 6 
+30 Levels: 0 ... Some college, but less than 1 year
+
+[[5]]
+           label    predicateType            group            limit 
+             Sex              int              N/A                0 
+suggested-weight    values.item.1    values.item.2 
+           PWGTP             Male           Female 
+Levels: 0 Female int Male N/A PWGTP Sex</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Can further subset returned list from previous function to return desired variables.</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>test_cat_vars_2 <span class="ot">&lt;-</span> <span class="fu">return_cat_vars</span>(<span class="dv">2024</span>)</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>test_cat_vars_2[<span class="dv">1</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[1]]
+                                               label 
+       Gave birth to child within the past 12 months 
+                                       predicateType 
+                                                 int 
+                                               group 
+                                                 N/A 
+                                               limit 
+                                                   0 
+                                    suggested-weight 
+                                               PWGTP 
+                                       values.item.0 
+N/A (less than 15 years/greater than 50 years/ male) 
+                                       values.item.2 
+                                                  No 
+                                       values.item.1 
+                                                 Yes 
+8 Levels: 0 Gave birth to child within the past 12 months int ... Yes</code></pre>
 </div>
 </div>
 <p><em>Writing function to specify geography level. (function works, no editing needed, remove note later)</em></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>geography_level <span class="ot">&lt;-</span> <span class="cf">function</span>(year_geo){</span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a> year_geo <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2021</span>, <span class="dv">2022</span>, <span class="dv">2023</span>, <span class="dv">2024</span>)</span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a> <span class="cf">if</span>(<span class="dv">2021</span>){</span>
-<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>   geo_api <span class="ot">&lt;-</span> <span class="st">'api.census.gov/data/2021/acs/acs1/pums?get=ST,REGION,DIVISION&amp;key=416ac733e884381d5fc80215dc879af0edb1dd8b'</span></span>
-<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>   geo_url <span class="ot">&lt;-</span> httr<span class="sc">::</span><span class="fu">GET</span>(geo_api)</span>
-<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>   geo_parsed <span class="ot">&lt;-</span> <span class="fu">fromJSON</span>(<span class="fu">rawToChar</span>(geo_url<span class="sc">$</span>content))</span>
-<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>   geo_tibble <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(geo_parsed)</span>
-<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>   <span class="fu">return</span>(geo_tibble)</span>
-<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a> }<span class="cf">else</span> <span class="cf">if</span>(<span class="dv">2022</span>){</span>
-<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>   geo_api <span class="ot">&lt;-</span> <span class="st">'api.census.gov/data/2022/acs/acs1/pums?get=ST,REGION,DIVISION&amp;key=416ac733e884381d5fc80215dc879af0edb1dd8b'</span></span>
-<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>   geo_url <span class="ot">&lt;-</span> httr<span class="sc">::</span><span class="fu">GET</span>(geo_api)</span>
-<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a>   geo_parsed <span class="ot">&lt;-</span> <span class="fu">fromJSON</span>(<span class="fu">rawToChar</span>(geo_url<span class="sc">$</span>content))</span>
-<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a>   geo_tibble <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(geo_parsed)</span>
-<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a>   <span class="fu">return</span>(geo_tibble)</span>
-<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a> }<span class="cf">else</span> <span class="cf">if</span>(<span class="dv">2023</span>){</span>
-<span id="cb33-16"><a href="#cb33-16" aria-hidden="true" tabindex="-1"></a>   geo_api <span class="ot">&lt;-</span> <span class="st">'api.census.gov/data/2023/acs/acs1/pums?get=STATE,REGION,DIVISION&amp;key=416ac733e884381d5fc80215dc879af0edb1dd8b'</span></span>
-<span id="cb33-17"><a href="#cb33-17" aria-hidden="true" tabindex="-1"></a>   geo_url <span class="ot">&lt;-</span> httr<span class="sc">::</span><span class="fu">GET</span>(geo_api)</span>
-<span id="cb33-18"><a href="#cb33-18" aria-hidden="true" tabindex="-1"></a>   geo_parsed <span class="ot">&lt;-</span> <span class="fu">fromJSON</span>(<span class="fu">rawToChar</span>(geo_url<span class="sc">$</span>content))</span>
-<span id="cb33-19"><a href="#cb33-19" aria-hidden="true" tabindex="-1"></a>   geo_tibble <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(geo_parsed)</span>
-<span id="cb33-20"><a href="#cb33-20" aria-hidden="true" tabindex="-1"></a>   <span class="fu">return</span>(geo_tibble)</span>
-<span id="cb33-21"><a href="#cb33-21" aria-hidden="true" tabindex="-1"></a> }<span class="cf">else</span> <span class="cf">if</span>(<span class="dv">2024</span>){</span>
-<span id="cb33-22"><a href="#cb33-22" aria-hidden="true" tabindex="-1"></a>   geo_api <span class="ot">&lt;-</span> <span class="st">'api.census.gov/data/2024/acs/acs1/pums?get=STATE,REGION,DIVISION&amp;key=416ac733e884381d5fc80215dc879af0edb1dd8b'</span></span>
-<span id="cb33-23"><a href="#cb33-23" aria-hidden="true" tabindex="-1"></a>   geo_url <span class="ot">&lt;-</span> httr<span class="sc">::</span><span class="fu">GET</span>(geo_api)</span>
-<span id="cb33-24"><a href="#cb33-24" aria-hidden="true" tabindex="-1"></a>   geo_parsed <span class="ot">&lt;-</span> <span class="fu">fromJSON</span>(<span class="fu">rawToChar</span>(geo_url<span class="sc">$</span>content))</span>
-<span id="cb33-25"><a href="#cb33-25" aria-hidden="true" tabindex="-1"></a>   geo_tibble <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(geo_parsed)</span>
-<span id="cb33-26"><a href="#cb33-26" aria-hidden="true" tabindex="-1"></a>   <span class="fu">return</span>(geo_tibble)</span>
-<span id="cb33-27"><a href="#cb33-27" aria-hidden="true" tabindex="-1"></a> }<span class="cf">else</span>{</span>
-<span id="cb33-28"><a href="#cb33-28" aria-hidden="true" tabindex="-1"></a>   <span class="st">'ERROR'</span></span>
-<span id="cb33-29"><a href="#cb33-29" aria-hidden="true" tabindex="-1"></a> }</span>
-<span id="cb33-30"><a href="#cb33-30" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb33-31"><a href="#cb33-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-32"><a href="#cb33-32" aria-hidden="true" tabindex="-1"></a>test_geo <span class="ot">&lt;-</span> <span class="fu">geography_level</span>(<span class="dv">2021</span>)</span>
-<span id="cb33-33"><a href="#cb33-33" aria-hidden="true" tabindex="-1"></a>test_geo</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>geography_level <span class="ot">&lt;-</span> <span class="cf">function</span>(year_geo){</span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a> year_geo <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2021</span>, <span class="dv">2022</span>, <span class="dv">2023</span>, <span class="dv">2024</span>)</span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a> <span class="cf">if</span>(<span class="dv">2021</span>){</span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>   geo_api <span class="ot">&lt;-</span> <span class="st">'api.census.gov/data/2021/acs/acs1/pums?get=ST,REGION,DIVISION&amp;key=416ac733e884381d5fc80215dc879af0edb1dd8b'</span></span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>   geo_url <span class="ot">&lt;-</span> httr<span class="sc">::</span><span class="fu">GET</span>(geo_api)</span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a>   geo_parsed <span class="ot">&lt;-</span> <span class="fu">fromJSON</span>(<span class="fu">rawToChar</span>(geo_url<span class="sc">$</span>content))</span>
+<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a>   geo_tibble <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(geo_parsed)</span>
+<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a>   <span class="fu">return</span>(geo_tibble)</span>
+<span id="cb54-9"><a href="#cb54-9" aria-hidden="true" tabindex="-1"></a> }<span class="cf">else</span> <span class="cf">if</span>(<span class="dv">2022</span>){</span>
+<span id="cb54-10"><a href="#cb54-10" aria-hidden="true" tabindex="-1"></a>   geo_api <span class="ot">&lt;-</span> <span class="st">'api.census.gov/data/2022/acs/acs1/pums?get=ST,REGION,DIVISION&amp;key=416ac733e884381d5fc80215dc879af0edb1dd8b'</span></span>
+<span id="cb54-11"><a href="#cb54-11" aria-hidden="true" tabindex="-1"></a>   geo_url <span class="ot">&lt;-</span> httr<span class="sc">::</span><span class="fu">GET</span>(geo_api)</span>
+<span id="cb54-12"><a href="#cb54-12" aria-hidden="true" tabindex="-1"></a>   geo_parsed <span class="ot">&lt;-</span> <span class="fu">fromJSON</span>(<span class="fu">rawToChar</span>(geo_url<span class="sc">$</span>content))</span>
+<span id="cb54-13"><a href="#cb54-13" aria-hidden="true" tabindex="-1"></a>   geo_tibble <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(geo_parsed)</span>
+<span id="cb54-14"><a href="#cb54-14" aria-hidden="true" tabindex="-1"></a>   <span class="fu">return</span>(geo_tibble)</span>
+<span id="cb54-15"><a href="#cb54-15" aria-hidden="true" tabindex="-1"></a> }<span class="cf">else</span> <span class="cf">if</span>(<span class="dv">2023</span>){</span>
+<span id="cb54-16"><a href="#cb54-16" aria-hidden="true" tabindex="-1"></a>   geo_api <span class="ot">&lt;-</span> <span class="st">'api.census.gov/data/2023/acs/acs1/pums?get=STATE,REGION,DIVISION&amp;key=416ac733e884381d5fc80215dc879af0edb1dd8b'</span></span>
+<span id="cb54-17"><a href="#cb54-17" aria-hidden="true" tabindex="-1"></a>   geo_url <span class="ot">&lt;-</span> httr<span class="sc">::</span><span class="fu">GET</span>(geo_api)</span>
+<span id="cb54-18"><a href="#cb54-18" aria-hidden="true" tabindex="-1"></a>   geo_parsed <span class="ot">&lt;-</span> <span class="fu">fromJSON</span>(<span class="fu">rawToChar</span>(geo_url<span class="sc">$</span>content))</span>
+<span id="cb54-19"><a href="#cb54-19" aria-hidden="true" tabindex="-1"></a>   geo_tibble <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(geo_parsed)</span>
+<span id="cb54-20"><a href="#cb54-20" aria-hidden="true" tabindex="-1"></a>   <span class="fu">return</span>(geo_tibble)</span>
+<span id="cb54-21"><a href="#cb54-21" aria-hidden="true" tabindex="-1"></a> }<span class="cf">else</span> <span class="cf">if</span>(<span class="dv">2024</span>){</span>
+<span id="cb54-22"><a href="#cb54-22" aria-hidden="true" tabindex="-1"></a>   geo_api <span class="ot">&lt;-</span> <span class="st">'api.census.gov/data/2024/acs/acs1/pums?get=STATE,REGION,DIVISION&amp;key=416ac733e884381d5fc80215dc879af0edb1dd8b'</span></span>
+<span id="cb54-23"><a href="#cb54-23" aria-hidden="true" tabindex="-1"></a>   geo_url <span class="ot">&lt;-</span> httr<span class="sc">::</span><span class="fu">GET</span>(geo_api)</span>
+<span id="cb54-24"><a href="#cb54-24" aria-hidden="true" tabindex="-1"></a>   geo_parsed <span class="ot">&lt;-</span> <span class="fu">fromJSON</span>(<span class="fu">rawToChar</span>(geo_url<span class="sc">$</span>content))</span>
+<span id="cb54-25"><a href="#cb54-25" aria-hidden="true" tabindex="-1"></a>   geo_tibble <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(geo_parsed)</span>
+<span id="cb54-26"><a href="#cb54-26" aria-hidden="true" tabindex="-1"></a>   <span class="fu">return</span>(geo_tibble)</span>
+<span id="cb54-27"><a href="#cb54-27" aria-hidden="true" tabindex="-1"></a> }<span class="cf">else</span>{</span>
+<span id="cb54-28"><a href="#cb54-28" aria-hidden="true" tabindex="-1"></a>   <span class="st">'ERROR'</span></span>
+<span id="cb54-29"><a href="#cb54-29" aria-hidden="true" tabindex="-1"></a> }</span>
+<span id="cb54-30"><a href="#cb54-30" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb54-31"><a href="#cb54-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-32"><a href="#cb54-32" aria-hidden="true" tabindex="-1"></a>test_geo <span class="ot">&lt;-</span> <span class="fu">geography_level</span>(<span class="dv">2021</span>)</span>
+<span id="cb54-33"><a href="#cb54-33" aria-hidden="true" tabindex="-1"></a>test_geo</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1,560,256 × 3
    V1    V2     V3      
@@ -762,8 +1019,8 @@ $values$item$`2`
 </div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>test_list_1 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">'2021_variables.rds'</span>)</span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>test_list_1<span class="sc">$</span>variables<span class="sc">$</span>REGION</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>test_list_1 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">'2021_variables.rds'</span>)</span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>test_list_1<span class="sc">$</span>variables<span class="sc">$</span>REGION</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$label
 [1] "Region code based on 2010 Census definitions"
@@ -791,8 +1048,8 @@ $values$item$`2`
 $values$item$`4`
 [1] "West"</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>test_list_2 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">'2022_variables.rds'</span>)</span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>test_list_2<span class="sc">$</span>variables<span class="sc">$</span>REGION</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>test_list_2 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">'2022_variables.rds'</span>)</span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>test_list_2<span class="sc">$</span>variables<span class="sc">$</span>REGION</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$label
 [1] "Region code based on 2020 Census definitions"
@@ -820,8 +1077,8 @@ $values$item$`2`
 $values$item$`4`
 [1] "West"</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>test_list_3 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">'2023_variables.rds'</span>)</span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>test_list_3<span class="sc">$</span>variables<span class="sc">$</span>REGION</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>test_list_3 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">'2023_variables.rds'</span>)</span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>test_list_3<span class="sc">$</span>variables<span class="sc">$</span>REGION</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$label
 [1] "Region code based on 2020 Census definitions"
@@ -849,8 +1106,8 @@ $values$item$`4`
 $values$item$`2`
 [1] "Midwest"</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>test_list_4 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">'2024_variables.rds'</span>)</span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>test_list_4<span class="sc">$</span>variables<span class="sc">$</span>REGION</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>test_list_4 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">'2024_variables.rds'</span>)</span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>test_list_4<span class="sc">$</span>variables<span class="sc">$</span>REGION</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$label
 [1] "Region code based on 2020 Census definitions"
@@ -879,35 +1136,138 @@ $values$item$`2`
 [1] "Midwest"</code></pre>
 </div>
 </div>
-<p><em>Writing functions to specify region, division, or state to subset data on.</em></p>
+<p><em>Writing functions to specify region, division, or state to subset data on. (FIX THIS)</em></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Default values: Region = South, Division = Puerto Rico, State = 'North Carolina/NC'</span></span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>subset_region <span class="ot">&lt;-</span> <span class="cf">function</span>(year_geo){</span>
-<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  year_geo <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2021</span>, <span class="dv">2022</span>, <span class="dv">2023</span>, <span class="dv">2024</span>)</span>
-<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="dv">2021</span>){</span>
-<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>    vars_2021 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">'2021_variables.rds'</span>)</span>
-<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>    region_2021 <span class="ot">&lt;-</span> vars_2021<span class="sc">$</span>variables<span class="sc">$</span>REGION</span>
-<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(region_2021)</span>
-<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span> <span class="cf">if</span>(<span class="dv">2022</span>){</span>
-<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a>    vars_2022 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">'2022_variables.rds'</span>)</span>
-<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a>    region_2022 <span class="ot">&lt;-</span> vars_2022<span class="sc">$</span>variables<span class="sc">$</span>REGION</span>
-<span id="cb43-11"><a href="#cb43-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(region_2022)</span>
-<span id="cb43-12"><a href="#cb43-12" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span> <span class="cf">if</span>(<span class="dv">2023</span>){</span>
-<span id="cb43-13"><a href="#cb43-13" aria-hidden="true" tabindex="-1"></a>    vars_2023 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">'2023_variables.rds'</span>)</span>
-<span id="cb43-14"><a href="#cb43-14" aria-hidden="true" tabindex="-1"></a>    region_2023 <span class="ot">&lt;-</span> vars_2023<span class="sc">$</span>variables<span class="sc">$</span>REGION</span>
-<span id="cb43-15"><a href="#cb43-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(region_2023)</span>
-<span id="cb43-16"><a href="#cb43-16" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span> <span class="cf">if</span>(<span class="dv">2024</span>){</span>
-<span id="cb43-17"><a href="#cb43-17" aria-hidden="true" tabindex="-1"></a>    vars_2024 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">'2024_variables.rds'</span>)</span>
-<span id="cb43-18"><a href="#cb43-18" aria-hidden="true" tabindex="-1"></a>    region_2024 <span class="ot">&lt;-</span> vars_2024<span class="sc">$</span>variables<span class="sc">$</span>REGION</span>
-<span id="cb43-19"><a href="#cb43-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(region_2024)</span>
-<span id="cb43-20"><a href="#cb43-20" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span>{</span>
-<span id="cb43-21"><a href="#cb43-21" aria-hidden="true" tabindex="-1"></a>    <span class="st">'ERROR'</span></span>
-<span id="cb43-22"><a href="#cb43-22" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb43-23"><a href="#cb43-23" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb43-24"><a href="#cb43-24" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb43-25"><a href="#cb43-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb43-26"><a href="#cb43-26" aria-hidden="true" tabindex="-1"></a>test_geo <span class="ot">&lt;-</span> <span class="fu">subset_region</span>(<span class="dv">2022</span>)</span>
-<span id="cb43-27"><a href="#cb43-27" aria-hidden="true" tabindex="-1"></a>test_geo</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>subset_geography <span class="ot">&lt;-</span> <span class="cf">function</span>(...){</span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>  subset_region <span class="ot">&lt;-</span> <span class="cf">function</span>(year_geo){</span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>  year_geo <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2021</span>, <span class="dv">2022</span>, <span class="dv">2023</span>, <span class="dv">2024</span>)</span>
+<span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="dv">2021</span>){</span>
+<span id="cb64-5"><a href="#cb64-5" aria-hidden="true" tabindex="-1"></a>    vars_2021 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">'2021_variables.rds'</span>)</span>
+<span id="cb64-6"><a href="#cb64-6" aria-hidden="true" tabindex="-1"></a>    region_2021 <span class="ot">&lt;-</span> vars_2021<span class="sc">$</span>variables<span class="sc">$</span>REGION</span>
+<span id="cb64-7"><a href="#cb64-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(region_2021)</span>
+<span id="cb64-8"><a href="#cb64-8" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span> <span class="cf">if</span>(<span class="dv">2022</span>){</span>
+<span id="cb64-9"><a href="#cb64-9" aria-hidden="true" tabindex="-1"></a>    vars_2022 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">'2022_variables.rds'</span>)</span>
+<span id="cb64-10"><a href="#cb64-10" aria-hidden="true" tabindex="-1"></a>    region_2022 <span class="ot">&lt;-</span> vars_2022<span class="sc">$</span>variables<span class="sc">$</span>REGION</span>
+<span id="cb64-11"><a href="#cb64-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(region_2022)</span>
+<span id="cb64-12"><a href="#cb64-12" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span> <span class="cf">if</span>(<span class="dv">2023</span>){</span>
+<span id="cb64-13"><a href="#cb64-13" aria-hidden="true" tabindex="-1"></a>    vars_2023 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">'2023_variables.rds'</span>)</span>
+<span id="cb64-14"><a href="#cb64-14" aria-hidden="true" tabindex="-1"></a>    region_2023 <span class="ot">&lt;-</span> vars_2023<span class="sc">$</span>variables<span class="sc">$</span>REGION</span>
+<span id="cb64-15"><a href="#cb64-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(region_2023)</span>
+<span id="cb64-16"><a href="#cb64-16" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span> <span class="cf">if</span>(<span class="dv">2024</span>){</span>
+<span id="cb64-17"><a href="#cb64-17" aria-hidden="true" tabindex="-1"></a>    vars_2024 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">'2024_variables.rds'</span>)</span>
+<span id="cb64-18"><a href="#cb64-18" aria-hidden="true" tabindex="-1"></a>    region_2024 <span class="ot">&lt;-</span> vars_2024<span class="sc">$</span>variables<span class="sc">$</span>REGION</span>
+<span id="cb64-19"><a href="#cb64-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(region_2024)</span>
+<span id="cb64-20"><a href="#cb64-20" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span>{</span>
+<span id="cb64-21"><a href="#cb64-21" aria-hidden="true" tabindex="-1"></a>    <span class="st">'ERROR'</span></span>
+<span id="cb64-22"><a href="#cb64-22" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb64-23"><a href="#cb64-23" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb64-24"><a href="#cb64-24" aria-hidden="true" tabindex="-1"></a>  subset_state <span class="ot">&lt;-</span> <span class="cf">function</span>(year_state){</span>
+<span id="cb64-25"><a href="#cb64-25" aria-hidden="true" tabindex="-1"></a>  year_state <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2021</span>, <span class="dv">2022</span>, <span class="dv">2023</span>, <span class="dv">2024</span>)</span>
+<span id="cb64-26"><a href="#cb64-26" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="dv">2021</span>){</span>
+<span id="cb64-27"><a href="#cb64-27" aria-hidden="true" tabindex="-1"></a>    vars_21 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">'2021_variables.rds'</span>)</span>
+<span id="cb64-28"><a href="#cb64-28" aria-hidden="true" tabindex="-1"></a>    state_21 <span class="ot">&lt;-</span> vars_21<span class="sc">$</span>variables<span class="sc">$</span>ST</span>
+<span id="cb64-29"><a href="#cb64-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(state_21)</span>
+<span id="cb64-30"><a href="#cb64-30" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span> <span class="cf">if</span>(<span class="dv">2022</span>){</span>
+<span id="cb64-31"><a href="#cb64-31" aria-hidden="true" tabindex="-1"></a>    vars_22 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">'2022_variables.rds'</span>)</span>
+<span id="cb64-32"><a href="#cb64-32" aria-hidden="true" tabindex="-1"></a>    state_22 <span class="ot">&lt;-</span> vars_22<span class="sc">$</span>variables<span class="sc">$</span>ST</span>
+<span id="cb64-33"><a href="#cb64-33" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(state_22)</span>
+<span id="cb64-34"><a href="#cb64-34" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span> <span class="cf">if</span>(<span class="dv">2023</span>){</span>
+<span id="cb64-35"><a href="#cb64-35" aria-hidden="true" tabindex="-1"></a>    vars_23 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">'2023_variables.rds'</span>)</span>
+<span id="cb64-36"><a href="#cb64-36" aria-hidden="true" tabindex="-1"></a>    state_23 <span class="ot">&lt;-</span> vars_23<span class="sc">$</span>variables<span class="sc">$</span>STATE</span>
+<span id="cb64-37"><a href="#cb64-37" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(state_23)</span>
+<span id="cb64-38"><a href="#cb64-38" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span> <span class="cf">if</span>(<span class="dv">2024</span>){</span>
+<span id="cb64-39"><a href="#cb64-39" aria-hidden="true" tabindex="-1"></a>    vars_24 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">'2024_variables.rds'</span>)</span>
+<span id="cb64-40"><a href="#cb64-40" aria-hidden="true" tabindex="-1"></a>    state_24 <span class="ot">&lt;-</span> vars_24<span class="sc">$</span>variables<span class="sc">$</span>STATE</span>
+<span id="cb64-41"><a href="#cb64-41" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(state_24)</span>
+<span id="cb64-42"><a href="#cb64-42" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span>{</span>
+<span id="cb64-43"><a href="#cb64-43" aria-hidden="true" tabindex="-1"></a>    <span class="st">'ERROR'</span></span>
+<span id="cb64-44"><a href="#cb64-44" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb64-45"><a href="#cb64-45" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb64-46"><a href="#cb64-46" aria-hidden="true" tabindex="-1"></a>  subset_division <span class="ot">&lt;-</span> <span class="cf">function</span>(year_division){</span>
+<span id="cb64-47"><a href="#cb64-47" aria-hidden="true" tabindex="-1"></a>  year_division <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2021</span>, <span class="dv">2022</span>, <span class="dv">2023</span>, <span class="dv">2024</span>)</span>
+<span id="cb64-48"><a href="#cb64-48" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="dv">2021</span>){</span>
+<span id="cb64-49"><a href="#cb64-49" aria-hidden="true" tabindex="-1"></a>    vars_21 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">'2021_variables.rds'</span>)</span>
+<span id="cb64-50"><a href="#cb64-50" aria-hidden="true" tabindex="-1"></a>    div_21 <span class="ot">&lt;-</span> vars_21<span class="sc">$</span>variables<span class="sc">$</span>DIVISION</span>
+<span id="cb64-51"><a href="#cb64-51" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(div_21)</span>
+<span id="cb64-52"><a href="#cb64-52" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span> <span class="cf">if</span>(<span class="dv">2022</span>){</span>
+<span id="cb64-53"><a href="#cb64-53" aria-hidden="true" tabindex="-1"></a>    vars_22 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">'2022_variables.rds'</span>)</span>
+<span id="cb64-54"><a href="#cb64-54" aria-hidden="true" tabindex="-1"></a>    div_22 <span class="ot">&lt;-</span> vars_22<span class="sc">$</span>variables<span class="sc">$</span>DIVISION</span>
+<span id="cb64-55"><a href="#cb64-55" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(div_22)</span>
+<span id="cb64-56"><a href="#cb64-56" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span> <span class="cf">if</span>(<span class="dv">2023</span>){</span>
+<span id="cb64-57"><a href="#cb64-57" aria-hidden="true" tabindex="-1"></a>    vars_23 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">'2023_variables.rds'</span>)</span>
+<span id="cb64-58"><a href="#cb64-58" aria-hidden="true" tabindex="-1"></a>    div_23 <span class="ot">&lt;-</span> vars_23<span class="sc">$</span>variables<span class="sc">$</span>DIVISION</span>
+<span id="cb64-59"><a href="#cb64-59" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(div_23)</span>
+<span id="cb64-60"><a href="#cb64-60" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span> <span class="cf">if</span>(<span class="dv">2024</span>){</span>
+<span id="cb64-61"><a href="#cb64-61" aria-hidden="true" tabindex="-1"></a>    vars_24 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">'2024_variables.rds'</span>)</span>
+<span id="cb64-62"><a href="#cb64-62" aria-hidden="true" tabindex="-1"></a>    div_24 <span class="ot">&lt;-</span> vars_24<span class="sc">$</span>variables<span class="sc">$</span>DIVISION</span>
+<span id="cb64-63"><a href="#cb64-63" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(div_24)</span>
+<span id="cb64-64"><a href="#cb64-64" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span>{</span>
+<span id="cb64-65"><a href="#cb64-65" aria-hidden="true" tabindex="-1"></a>    <span class="st">'ERROR'</span></span>
+<span id="cb64-66"><a href="#cb64-66" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb64-67"><a href="#cb64-67" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb64-68"><a href="#cb64-68" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb64-69"><a href="#cb64-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb64-70"><a href="#cb64-70" aria-hidden="true" tabindex="-1"></a>test_geo <span class="ot">&lt;-</span> <span class="fu">subset_geography</span>(<span class="at">year_geo =</span> <span class="dv">2021</span>, <span class="at">year_state =</span> <span class="dv">2021</span>, <span class="at">year_division =</span> <span class="dv">2021</span>)</span>
+<span id="cb64-71"><a href="#cb64-71" aria-hidden="true" tabindex="-1"></a>test_geo</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>function (year_division) 
+{
+    year_division &lt;- c(2021, 2022, 2023, 2024)
+    if (2021) {
+        vars_21 &lt;- readRDS("2021_variables.rds")
+        div_21 &lt;- vars_21$variables$DIVISION
+        return(div_21)
+    }
+    else if (2022) {
+        vars_22 &lt;- readRDS("2022_variables.rds")
+        div_22 &lt;- vars_22$variables$DIVISION
+        return(div_22)
+    }
+    else if (2023) {
+        vars_23 &lt;- readRDS("2023_variables.rds")
+        div_23 &lt;- vars_23$variables$DIVISION
+        return(div_23)
+    }
+    else if (2024) {
+        vars_24 &lt;- readRDS("2024_variables.rds")
+        div_24 &lt;- vars_24$variables$DIVISION
+        return(div_24)
+    }
+    else {
+        "ERROR"
+    }
+}
+&lt;bytecode: 0xd72ee2e78&gt;
+&lt;environment: 0xd73f19c40&gt;</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Default values: Region = South, Division = Puerto Rico, State = 'North Carolina/NC'</span></span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>subset_region <span class="ot">&lt;-</span> <span class="cf">function</span>(year_geo){</span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a>  year_geo <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2021</span>, <span class="dv">2022</span>, <span class="dv">2023</span>, <span class="dv">2024</span>)</span>
+<span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="dv">2021</span>){</span>
+<span id="cb66-5"><a href="#cb66-5" aria-hidden="true" tabindex="-1"></a>    vars_2021 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">'2021_variables.rds'</span>)</span>
+<span id="cb66-6"><a href="#cb66-6" aria-hidden="true" tabindex="-1"></a>    region_2021 <span class="ot">&lt;-</span> vars_2021<span class="sc">$</span>variables<span class="sc">$</span>REGION</span>
+<span id="cb66-7"><a href="#cb66-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(region_2021)</span>
+<span id="cb66-8"><a href="#cb66-8" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span> <span class="cf">if</span>(<span class="dv">2022</span>){</span>
+<span id="cb66-9"><a href="#cb66-9" aria-hidden="true" tabindex="-1"></a>    vars_2022 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">'2022_variables.rds'</span>)</span>
+<span id="cb66-10"><a href="#cb66-10" aria-hidden="true" tabindex="-1"></a>    region_2022 <span class="ot">&lt;-</span> vars_2022<span class="sc">$</span>variables<span class="sc">$</span>REGION</span>
+<span id="cb66-11"><a href="#cb66-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(region_2022)</span>
+<span id="cb66-12"><a href="#cb66-12" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span> <span class="cf">if</span>(<span class="dv">2023</span>){</span>
+<span id="cb66-13"><a href="#cb66-13" aria-hidden="true" tabindex="-1"></a>    vars_2023 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">'2023_variables.rds'</span>)</span>
+<span id="cb66-14"><a href="#cb66-14" aria-hidden="true" tabindex="-1"></a>    region_2023 <span class="ot">&lt;-</span> vars_2023<span class="sc">$</span>variables<span class="sc">$</span>REGION</span>
+<span id="cb66-15"><a href="#cb66-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(region_2023)</span>
+<span id="cb66-16"><a href="#cb66-16" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span> <span class="cf">if</span>(<span class="dv">2024</span>){</span>
+<span id="cb66-17"><a href="#cb66-17" aria-hidden="true" tabindex="-1"></a>    vars_2024 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">'2024_variables.rds'</span>)</span>
+<span id="cb66-18"><a href="#cb66-18" aria-hidden="true" tabindex="-1"></a>    region_2024 <span class="ot">&lt;-</span> vars_2024<span class="sc">$</span>variables<span class="sc">$</span>REGION</span>
+<span id="cb66-19"><a href="#cb66-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(region_2024)</span>
+<span id="cb66-20"><a href="#cb66-20" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span>{</span>
+<span id="cb66-21"><a href="#cb66-21" aria-hidden="true" tabindex="-1"></a>    <span class="st">'ERROR'</span></span>
+<span id="cb66-22"><a href="#cb66-22" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb66-23"><a href="#cb66-23" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb66-24"><a href="#cb66-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb66-25"><a href="#cb66-25" aria-hidden="true" tabindex="-1"></a>test_geo <span class="ot">&lt;-</span> <span class="fu">subset_region</span>(<span class="dv">2022</span>)</span>
+<span id="cb66-26"><a href="#cb66-26" aria-hidden="true" tabindex="-1"></a>test_geo</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$label
 [1] "Region code based on 2010 Census definitions"
@@ -937,31 +1297,31 @@ $values$item$`4`
 </div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>subset_state <span class="ot">&lt;-</span> <span class="cf">function</span>(year_state){</span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  year_state <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2021</span>, <span class="dv">2022</span>, <span class="dv">2023</span>, <span class="dv">2024</span>)</span>
-<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="dv">2021</span>){</span>
-<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>    vars_21 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">'2021_variables.rds'</span>)</span>
-<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>    state_21 <span class="ot">&lt;-</span> vars_21<span class="sc">$</span>variables<span class="sc">$</span>ST</span>
-<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(state_21)</span>
-<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span> <span class="cf">if</span>(<span class="dv">2022</span>){</span>
-<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>    vars_22 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">'2022_variables.rds'</span>)</span>
-<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a>    state_22 <span class="ot">&lt;-</span> vars_22<span class="sc">$</span>variables<span class="sc">$</span>ST</span>
-<span id="cb45-10"><a href="#cb45-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(state_22)</span>
-<span id="cb45-11"><a href="#cb45-11" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span> <span class="cf">if</span>(<span class="dv">2023</span>){</span>
-<span id="cb45-12"><a href="#cb45-12" aria-hidden="true" tabindex="-1"></a>    vars_23 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">'2023_variables.rds'</span>)</span>
-<span id="cb45-13"><a href="#cb45-13" aria-hidden="true" tabindex="-1"></a>    state_23 <span class="ot">&lt;-</span> vars_23<span class="sc">$</span>variables<span class="sc">$</span>STATE</span>
-<span id="cb45-14"><a href="#cb45-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(state_23)</span>
-<span id="cb45-15"><a href="#cb45-15" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span> <span class="cf">if</span>(<span class="dv">2024</span>){</span>
-<span id="cb45-16"><a href="#cb45-16" aria-hidden="true" tabindex="-1"></a>    vars_24 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">'2024_variables.rds'</span>)</span>
-<span id="cb45-17"><a href="#cb45-17" aria-hidden="true" tabindex="-1"></a>    state_24 <span class="ot">&lt;-</span> vars_24<span class="sc">$</span>variables<span class="sc">$</span>STATE</span>
-<span id="cb45-18"><a href="#cb45-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(state_24)</span>
-<span id="cb45-19"><a href="#cb45-19" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span>{</span>
-<span id="cb45-20"><a href="#cb45-20" aria-hidden="true" tabindex="-1"></a>    <span class="st">'ERROR'</span></span>
-<span id="cb45-21"><a href="#cb45-21" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb45-22"><a href="#cb45-22" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb45-23"><a href="#cb45-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-24"><a href="#cb45-24" aria-hidden="true" tabindex="-1"></a>test_state <span class="ot">&lt;-</span> <span class="fu">subset_state</span>(<span class="dv">2021</span>)</span>
-<span id="cb45-25"><a href="#cb45-25" aria-hidden="true" tabindex="-1"></a>test_state</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>subset_state <span class="ot">&lt;-</span> <span class="cf">function</span>(year_state){</span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>  year_state <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2021</span>, <span class="dv">2022</span>, <span class="dv">2023</span>, <span class="dv">2024</span>)</span>
+<span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="dv">2021</span>){</span>
+<span id="cb68-4"><a href="#cb68-4" aria-hidden="true" tabindex="-1"></a>    vars_21 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">'2021_variables.rds'</span>)</span>
+<span id="cb68-5"><a href="#cb68-5" aria-hidden="true" tabindex="-1"></a>    state_21 <span class="ot">&lt;-</span> vars_21<span class="sc">$</span>variables<span class="sc">$</span>ST</span>
+<span id="cb68-6"><a href="#cb68-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(state_21)</span>
+<span id="cb68-7"><a href="#cb68-7" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span> <span class="cf">if</span>(<span class="dv">2022</span>){</span>
+<span id="cb68-8"><a href="#cb68-8" aria-hidden="true" tabindex="-1"></a>    vars_22 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">'2022_variables.rds'</span>)</span>
+<span id="cb68-9"><a href="#cb68-9" aria-hidden="true" tabindex="-1"></a>    state_22 <span class="ot">&lt;-</span> vars_22<span class="sc">$</span>variables<span class="sc">$</span>ST</span>
+<span id="cb68-10"><a href="#cb68-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(state_22)</span>
+<span id="cb68-11"><a href="#cb68-11" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span> <span class="cf">if</span>(<span class="dv">2023</span>){</span>
+<span id="cb68-12"><a href="#cb68-12" aria-hidden="true" tabindex="-1"></a>    vars_23 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">'2023_variables.rds'</span>)</span>
+<span id="cb68-13"><a href="#cb68-13" aria-hidden="true" tabindex="-1"></a>    state_23 <span class="ot">&lt;-</span> vars_23<span class="sc">$</span>variables<span class="sc">$</span>STATE</span>
+<span id="cb68-14"><a href="#cb68-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(state_23)</span>
+<span id="cb68-15"><a href="#cb68-15" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span> <span class="cf">if</span>(<span class="dv">2024</span>){</span>
+<span id="cb68-16"><a href="#cb68-16" aria-hidden="true" tabindex="-1"></a>    vars_24 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">'2024_variables.rds'</span>)</span>
+<span id="cb68-17"><a href="#cb68-17" aria-hidden="true" tabindex="-1"></a>    state_24 <span class="ot">&lt;-</span> vars_24<span class="sc">$</span>variables<span class="sc">$</span>STATE</span>
+<span id="cb68-18"><a href="#cb68-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(state_24)</span>
+<span id="cb68-19"><a href="#cb68-19" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span>{</span>
+<span id="cb68-20"><a href="#cb68-20" aria-hidden="true" tabindex="-1"></a>    <span class="st">'ERROR'</span></span>
+<span id="cb68-21"><a href="#cb68-21" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb68-22"><a href="#cb68-22" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb68-23"><a href="#cb68-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb68-24"><a href="#cb68-24" aria-hidden="true" tabindex="-1"></a>test_state <span class="ot">&lt;-</span> <span class="fu">subset_state</span>(<span class="dv">2021</span>)</span>
+<span id="cb68-25"><a href="#cb68-25" aria-hidden="true" tabindex="-1"></a>test_state</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$label
 [1] "State Code based on 2010 Census definitions"
@@ -1132,31 +1492,31 @@ $values$item$`40`
 </div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>subset_division <span class="ot">&lt;-</span> <span class="cf">function</span>(year_division){</span>
-<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  year_division <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2021</span>, <span class="dv">2022</span>, <span class="dv">2023</span>, <span class="dv">2024</span>)</span>
-<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="dv">2021</span>){</span>
-<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>    vars_21 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">'2021_variables.rds'</span>)</span>
-<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>    div_21 <span class="ot">&lt;-</span> vars_21<span class="sc">$</span>variables<span class="sc">$</span>DIVISION</span>
-<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(div_21)</span>
-<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span> <span class="cf">if</span>(<span class="dv">2022</span>){</span>
-<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a>    vars_22 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">'2022_variables.rds'</span>)</span>
-<span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a>    div_22 <span class="ot">&lt;-</span> vars_22<span class="sc">$</span>variables<span class="sc">$</span>DIVISION</span>
-<span id="cb47-10"><a href="#cb47-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(div_22)</span>
-<span id="cb47-11"><a href="#cb47-11" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span> <span class="cf">if</span>(<span class="dv">2023</span>){</span>
-<span id="cb47-12"><a href="#cb47-12" aria-hidden="true" tabindex="-1"></a>    vars_23 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">'2023_variables.rds'</span>)</span>
-<span id="cb47-13"><a href="#cb47-13" aria-hidden="true" tabindex="-1"></a>    div_23 <span class="ot">&lt;-</span> vars_23<span class="sc">$</span>variables<span class="sc">$</span>DIVISION</span>
-<span id="cb47-14"><a href="#cb47-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(div_23)</span>
-<span id="cb47-15"><a href="#cb47-15" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span> <span class="cf">if</span>(<span class="dv">2024</span>){</span>
-<span id="cb47-16"><a href="#cb47-16" aria-hidden="true" tabindex="-1"></a>    vars_24 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">'2024_variables.rds'</span>)</span>
-<span id="cb47-17"><a href="#cb47-17" aria-hidden="true" tabindex="-1"></a>    div_24 <span class="ot">&lt;-</span> vars_24<span class="sc">$</span>variables<span class="sc">$</span>DIVISION</span>
-<span id="cb47-18"><a href="#cb47-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(div_24)</span>
-<span id="cb47-19"><a href="#cb47-19" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span>{</span>
-<span id="cb47-20"><a href="#cb47-20" aria-hidden="true" tabindex="-1"></a>    <span class="st">'ERROR'</span></span>
-<span id="cb47-21"><a href="#cb47-21" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb47-22"><a href="#cb47-22" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb47-23"><a href="#cb47-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-24"><a href="#cb47-24" aria-hidden="true" tabindex="-1"></a>test_division <span class="ot">&lt;-</span> <span class="fu">subset_division</span>(<span class="dv">2022</span>)</span>
-<span id="cb47-25"><a href="#cb47-25" aria-hidden="true" tabindex="-1"></a>test_division</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>subset_division <span class="ot">&lt;-</span> <span class="cf">function</span>(year_division){</span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a>  year_division <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2021</span>, <span class="dv">2022</span>, <span class="dv">2023</span>, <span class="dv">2024</span>)</span>
+<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="dv">2021</span>){</span>
+<span id="cb70-4"><a href="#cb70-4" aria-hidden="true" tabindex="-1"></a>    vars_21 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">'2021_variables.rds'</span>)</span>
+<span id="cb70-5"><a href="#cb70-5" aria-hidden="true" tabindex="-1"></a>    div_21 <span class="ot">&lt;-</span> vars_21<span class="sc">$</span>variables<span class="sc">$</span>DIVISION</span>
+<span id="cb70-6"><a href="#cb70-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(div_21)</span>
+<span id="cb70-7"><a href="#cb70-7" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span> <span class="cf">if</span>(<span class="dv">2022</span>){</span>
+<span id="cb70-8"><a href="#cb70-8" aria-hidden="true" tabindex="-1"></a>    vars_22 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">'2022_variables.rds'</span>)</span>
+<span id="cb70-9"><a href="#cb70-9" aria-hidden="true" tabindex="-1"></a>    div_22 <span class="ot">&lt;-</span> vars_22<span class="sc">$</span>variables<span class="sc">$</span>DIVISION</span>
+<span id="cb70-10"><a href="#cb70-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(div_22)</span>
+<span id="cb70-11"><a href="#cb70-11" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span> <span class="cf">if</span>(<span class="dv">2023</span>){</span>
+<span id="cb70-12"><a href="#cb70-12" aria-hidden="true" tabindex="-1"></a>    vars_23 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">'2023_variables.rds'</span>)</span>
+<span id="cb70-13"><a href="#cb70-13" aria-hidden="true" tabindex="-1"></a>    div_23 <span class="ot">&lt;-</span> vars_23<span class="sc">$</span>variables<span class="sc">$</span>DIVISION</span>
+<span id="cb70-14"><a href="#cb70-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(div_23)</span>
+<span id="cb70-15"><a href="#cb70-15" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span> <span class="cf">if</span>(<span class="dv">2024</span>){</span>
+<span id="cb70-16"><a href="#cb70-16" aria-hidden="true" tabindex="-1"></a>    vars_24 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">'2024_variables.rds'</span>)</span>
+<span id="cb70-17"><a href="#cb70-17" aria-hidden="true" tabindex="-1"></a>    div_24 <span class="ot">&lt;-</span> vars_24<span class="sc">$</span>variables<span class="sc">$</span>DIVISION</span>
+<span id="cb70-18"><a href="#cb70-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(div_24)</span>
+<span id="cb70-19"><a href="#cb70-19" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span>{</span>
+<span id="cb70-20"><a href="#cb70-20" aria-hidden="true" tabindex="-1"></a>    <span class="st">'ERROR'</span></span>
+<span id="cb70-21"><a href="#cb70-21" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb70-22"><a href="#cb70-22" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb70-23"><a href="#cb70-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-24"><a href="#cb70-24" aria-hidden="true" tabindex="-1"></a>test_division <span class="ot">&lt;-</span> <span class="fu">subset_division</span>(<span class="dv">2022</span>)</span>
+<span id="cb70-25"><a href="#cb70-25" aria-hidden="true" tabindex="-1"></a>test_division</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$label
 [1] "Division code based on 2010 Census definitions"
@@ -1203,7 +1563,7 @@ $values$item$`1`
 </section>
 <section id="combining-years" class="level2">
 <h2 class="anchored" data-anchor-id="combining-years">COMBINING YEARS</h2>
-<p><em>Writing function to specify multiple years of survey data.</em></p>
+<p><em>Writing function to specify multiple years of survey data. (Still need to run, be careful with it!)</em></p>
 </section>
 </section>
 <section id="part-two-writing-a-generic-function-for-summarizing" class="level1">
@@ -1213,124 +1573,6 @@ $values$item$`1`
 </section>
 <section id="graphical-summaries" class="level2">
 <h2 class="anchored" data-anchor-id="graphical-summaries">GRAPHICAL SUMMARIES</h2>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>vars_test <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">'2021_variables.rds'</span>)</span>
-<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>vars_test<span class="sc">$</span>variables<span class="sc">$</span>FER</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>$label
-[1] "Gave birth to child within the past 12 months"
-
-$predicateType
-[1] "int"
-
-$group
-[1] "N/A"
-
-$limit
-[1] 0
-
-$`suggested-weight`
-[1] "PWGTP"
-
-$values
-$values$item
-$values$item$`0`
-[1] "N/A (less than 15 years/greater than 50 years/ male)"
-
-$values$item$`2`
-[1] "No"
-
-$values$item$`1`
-[1] "Yes"</code></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>vars_test_2 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">'2022_variables.rds'</span>)</span>
-<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>vars_test_2<span class="sc">$</span>variables<span class="sc">$</span>FER</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>$label
-[1] "Gave birth to child within the past 12 months"
-
-$predicateType
-[1] "int"
-
-$group
-[1] "N/A"
-
-$limit
-[1] 0
-
-$`suggested-weight`
-[1] "PWGTP"
-
-$values
-$values$item
-$values$item$`0`
-[1] "N/A (less than 15 years/greater than 50 years/ male)"
-
-$values$item$`2`
-[1] "No"
-
-$values$item$`1`
-[1] "Yes"</code></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>vars_test_3 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">'2023_variables.rds'</span>)</span>
-<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>vars_test_3<span class="sc">$</span>variables<span class="sc">$</span>FER</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>$label
-[1] "Gave birth to child within the past 12 months"
-
-$predicateType
-[1] "int"
-
-$group
-[1] "N/A"
-
-$limit
-[1] 0
-
-$`suggested-weight`
-[1] "PWGTP"
-
-$values
-$values$item
-$values$item$`0`
-[1] "N/A (less than 15 years/greater than 50 years/ male)"
-
-$values$item$`2`
-[1] "No"
-
-$values$item$`1`
-[1] "Yes"</code></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>vars_test_4 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">'2024_variables.rds'</span>)</span>
-<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>vars_test_4<span class="sc">$</span>variables<span class="sc">$</span>FER</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>$label
-[1] "Gave birth to child within the past 12 months"
-
-$predicateType
-[1] "int"
-
-$group
-[1] "N/A"
-
-$limit
-[1] 0
-
-$`suggested-weight`
-[1] "PWGTP"
-
-$values
-$values$item
-$values$item$`0`
-[1] "N/A (less than 15 years/greater than 50 years/ male)"
-
-$values$item$`2`
-[1] "No"
-
-$values$item$`1`
-[1] "Yes"</code></pre>
-</div>
-</div>
 
 
 </section>
