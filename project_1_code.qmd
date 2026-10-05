@@ -59,6 +59,8 @@ variables_2024 <- list_vars_24(api_url4)
 
 *Putting variable lists into .rds files.*
 
+*I had previously tried putting everything into one data frame, but it ended up recycling parts due to uneven lengths. Having them in four separate files seems to work fine.*
+
 ```{r}
 #Previously attempted this by putting everything into one data frame, but it ended up recycling parts due to uneven lengths.
 saveRDS(variables_2021, file = '2021_variables.rds')
@@ -210,7 +212,7 @@ test_num
 
 *Writing a function to turn the time data into numeric time data.*
 
-*This was definitely the part that gave me the most trouble. There was a point where the function I was trying to write would cause RStudio to shut down and become completely unresponsive.*
+*This was definitely the part that gave me the most trouble. There was a point where the function I was trying to write would cause RStudio to shut down and become completely unresponsive. I also decided to separate this into two different functions because I imagine the combined one would be very long.*
 
 ```{r}
 #Writing code to return midpoint of JWAP
@@ -253,6 +255,7 @@ processed <- variables_df |>
 print(processed)
 }
 
+
 #Writing code to return midpoint of JWDP
 return_JWDP <- function(year){
   variables <- paste0(year, '_variables.rds')
@@ -293,7 +296,7 @@ processed <- variables_df |>
 print(processed)
 }
 
-#Testing everything out
+#Examples of how to use this function
 JWAP_test <- return_JWAP(2021)
 JWAP_test
 JWDP_test <- return_JWDP(2021)
@@ -315,33 +318,54 @@ SCH = factor(unlist(var_list$variables$SCH))
 SCHL = factor(unlist(var_list$variables$SCHL))
 SEX = factor(unlist(var_list$variables$SEX))
 var_list <- list(FER = FER, HHL = HHL, SCH = SCH, SCHL = SCHL, SEX = SEX)
-return(var_list[target_var])
+return(var_list[[target_var]])
 }
 
-#Testing it out
+#Example of how to use this function
 test_cat_vars <- return_cat_vars(2023, 'FER')
 test_cat_vars
 ```
 
 *Writing function to specify geography level.*
 
-*I didn't have much trouble with this one.*
+*I didn't have much trouble with this one. I decided to split them into two functions to account for the STATE and ST variables.*
 
 ```{r}
-#Writing function
-geography_level <- function(year, target_var = 'REGION'){
+#This one is meant for the years 2021 and 2022
+geography_level <- function(year, target_var = 'REGION', all_values = FALSE){
+rds <- paste0(year, '_variables.rds')
+vars_list <- readRDS(rds)
+REGION = vars_list$variables$REGION
+ST = vars_list$variables$ST
+DIVISION = vars_list$variables$DIVISION
+geo_list <- list(REGION = REGION, ST = ST, DIVISION = DIVISION)
+if(all_values){
+  return('ERROR')
+}else{
+  return(geo_list[[target_var]])
+}
+}
+
+#This one is meant for the years 2023 and 2024
+geography_level_2 <- function(year, target_var = 'REGION', all_values = FALSE){
 rds <- paste0(year, '_variables.rds')
 vars_list <- readRDS(rds)
 REGION = vars_list$variables$REGION
 STATE = vars_list$variables$STATE
 DIVISION = vars_list$variables$DIVISION
 geo_list <- list(REGION = REGION, STATE = STATE, DIVISION = DIVISION)
-return(geo_list[target_var])
+if(all_values){
+  return('ERROR')
+}else{
+  return(geo_list[[target_var]])
+}
 }
 
-#Testing this function
-test_geo <- geography_level(2021)
+#Examples of how to use these functions, including one that returns 'error'.
+test_geo <- geography_level(2021, target_var = 'DIVISION')
 test_geo
+test_geo_2 <- geography_level_2(2023, all_values = TRUE)
+test_geo_2
 ```
 
 *Writing functions to specify region, division, or state to subset data on.*
@@ -350,14 +374,23 @@ test_geo
 
 ```{r}
 #Writing the region funcition
-subset_region <- function(year){
+subset_region <- function(year, target_var = 'Northeast', all_values = FALSE){
 rds <- paste0(year, '_variables.rds')
 vars_list <- readRDS(rds)
-region = vars_list$variables$REGION
-return(region)
+Northeast = vars_list$variables$REGION$values$item$`1`
+Puerto_Rico = vars_list$variables$REGION$values$item$`9`
+South = vars_list$variables$REGION$values$item$`3`
+West = vars_list$variables$REGION$values$item$`4`
+Midwest = vars_list$variables$REGION$values$item$`2`
+region_list <- list(Northeast = Northeast, Puerto_Rico = Puerto_Rico, South = South, West = West, Midwest = Midwest)
+if(all_values){
+  return(region_list)
+}else{
+  return(region_list[[target_var]])
 }
-#Testing
-test_geo <- subset_region(2022)
+}
+#Example of how to use this function
+test_geo <- subset_region(2023, target_var = 'South', all_values = FALSE)
 test_geo
 ```
 
@@ -365,46 +398,171 @@ test_geo
 #Writing the state function
 
 #This one should be used for the 2021 and 2022 data
-subset_st <- function(year){
+subset_st <- function(year, target_var = 'North_Carolina', all_values = FALSE){
 rds <- paste0(year, '_variables.rds')
 vars_list <- readRDS(rds)
-state = vars_list$variables$ST
-return(state)
+Tennessee = vars_list$variables$ST$values$item$`47`
+Arizona = vars_list$variables$ST$values$item$`04`
+Arkansas = vars_list$variables$ST$values$item$`05`
+Utah = vars_list$variables$ST$values$item$`49`
+Connecticut = vars_list$variables$ST$values$item$`09`
+Vermont = vars_list$variables$ST$values$item$`50`
+Mississippi = vars_list$variables$ST$values$item$`28`
+North_Carolina = vars_list$variables$ST$values$item$`37`
+Pennsylvania = vars_list$variables$ST$values$item$`42`
+South_Carolina = vars_list$variables$ST$values$item$`45`
+Virginia = vars_list$variables$ST$values$item$`51`
+Hawaii = vars_list$variables$ST$values$item$`15`
+Massachusetts = vars_list$variables$ST$values$item$`25`
+Puerto_Rico = vars_list$variables$ST$values$item$`72`
+Montana = vars_list$variables$ST$values$item$`30`
+New_Hampshire = vars_list$variables$ST$values$item$`33`
+New_Mexico = vars_list$variables$ST$values$item$`35`
+Florida = vars_list$variables$ST$values$item$`12`
+Texas = vars_list$variables$ST$values$item$`48`
+Washington = vars_list$variables$ST$values$item$`53`
+Georgia = vars_list$variables$ST$values$item$`13`
+Indiana = vars_list$variables$ST$values$item$`18`
+Kansas = vars_list$variables$ST$values$item$`20`
+Michigan = vars_list$variables$ST$values$item$`26`
+Nevada = vars_list$variables$ST$values$item$`32`
+West_Virginia = vars_list$variables$ST$values$item$`54`
+Wisconsin = vars_list$variables$ST$values$item$`55`
+Minnesota = vars_list$variables$ST$values$item$`27`
+Idaho = vars_list$variables$ST$values$item$`16`
+Iowa = vars_list$variables$ST$values$item$`19`
+Louisiana = vars_list$variables$ST$values$item$`22`
+North_Dakota = vars_list$variables$ST$values$item$`38`
+Alabama = vars_list$variables$ST$values$item$`01`
+Alaska = vars_list$variables$ST$values$item$`02`
+California = vars_list$variables$ST$values$item$`06`
+Colorado = vars_list$variables$ST$values$item$`08`
+District_of_Columbia = vars_list$variables$ST$values$item$`11`
+Maine = vars_list$variables$ST$values$item$`23`
+New_Jersey = vars_list$variables$ST$values$item$`34`
+Ohio = vars_list$variables$ST$values$item$`39`
+Delaware = vars_list$variables$ST$values$item$`10`
+Wyoming = vars_list$variables$ST$values$item$`56`
+Kentucky = vars_list$variables$ST$values$item$`21`
+Maryland = vars_list$variables$ST$values$item$`24`
+Rhode_Island = vars_list$variables$ST$values$item$`44`
+South_Dakota = vars_list$variables$ST$values$item$`46`
+Illinois = vars_list$variables$ST$values$item$`17`
+Missouri = vars_list$variables$ST$values$item$`29`
+Nebraska = vars_list$variables$ST$values$item$`31`
+New_York = vars_list$variables$ST$values$item$`36`
+Oklahoma = vars_list$variables$ST$values$item$`40`
+Oregon = vars_list$variables$ST$values$item$`41`
+st_list <- list(Tennessee = Tennessee, Arizona = Arizona, Arkansas = Arkansas, Utah = Utah, Connecticut = Connecticut, Vermont = Vermont, Mississippi = Mississippi, North_Carolina = North_Carolina, Pennsylvania = Pennsylvania, South_Carolina = South_Carolina, Virginia = Virginia, Hawaii = Hawaii, Massachusetts = Massachusetts, Puerto_Rico = Puerto_Rico, Montana = Montana, New_Hampshire = New_Hampshire, New_Mexico = New_Mexico, Florida = Florida, Texas = Texas, Washington = Washington, Georgia = Georgia, Indiana = Indiana, Kansas = Kansas, Michigan = Michigan, Nevada = Nevada, West_Virginia = West_Virginia, Wisconsin = Wisconsin, Minnesota = Minnesota, Idaho = Idaho, Iowa = Iowa, Louisiana = Louisiana, North_Dakota = North_Dakota, Alabama = Alabama, Alaska = Alaska, California = California, Colorado = Colorado, District_of_Columbia = District_of_Columbia, Maine = Maine, New_Jersey = New_Jersey, Ohio = Ohio, Delaware = Delaware, Wyoming = Wyoming, Kentucky = Kentucky, Maryland = Maryland, Rhode_Island = Rhode_Island, South_Dakota = South_Dakota, Illinois = Illinois, Missouri = Missouri, Nebraska = Nebraska, New_York = New_York, Oklahoma = Oklahoma, Oregon = Oregon)
+
+if(all_values){
+  return(st_list)
+}else{
+  return(st_list[[target_var]])
+}
 }
 
 #This one should be used for the 2023 and 2024 data
-subset_state <- function(year){
+subset_state <- function(year, target_var = 'North_Carolina', all_values = FALSE){
 rds <- paste0(year, '_variables.rds')
 vars_list <- readRDS(rds)
-state = vars_list$variables$STATE
-return(state)
+Tennessee = vars_list$variables$STATE$values$item$`47`
+Arizona = vars_list$variables$STATE$values$item$`04`
+Arkansas = vars_list$variables$STATE$values$item$`05`
+Utah = vars_list$variables$STATE$values$item$`49`
+Connecticut = vars_list$variables$STATE$values$item$`09`
+Vermont = vars_list$variables$STATE$values$item$`50`
+Mississippi = vars_list$variables$STATE$values$item$`28`
+North_Carolina = vars_list$variables$STATE$values$item$`37`
+Pennsylvania = vars_list$variables$STATE$values$item$`42`
+South_Carolina = vars_list$variables$STATE$values$item$`45`
+Virginia = vars_list$variables$STATE$values$item$`51`
+Hawaii = vars_list$variables$STATE$values$item$`15`
+Massachusetts = vars_list$variables$STATE$values$item$`25`
+Puerto_Rico = vars_list$variables$STATE$values$item$`72`
+Montana = vars_list$variables$STATE$values$item$`30`
+New_Hampshire = vars_list$variables$STATE$values$item$`33`
+New_Mexico = vars_list$variables$STATE$values$item$`35`
+Florida = vars_list$variables$STATE$values$item$`12`
+Texas = vars_list$variables$STATE$values$item$`48`
+Washington = vars_list$variables$STATE$values$item$`53`
+Georgia = vars_list$variables$STATE$values$item$`13`
+Indiana = vars_list$variables$STATE$values$item$`18`
+Kansas = vars_list$variables$STATE$values$item$`20`
+Michigan = vars_list$variables$STATE$values$item$`26`
+Nevada = vars_list$variables$STATE$values$item$`32`
+West_Virginia = vars_list$variables$STATE$values$item$`54`
+Wisconsin = vars_list$variables$STATE$values$item$`55`
+Minnesota = vars_list$variables$STATE$values$item$`27`
+Idaho = vars_list$variables$STATE$values$item$`16`
+Iowa = vars_list$variables$STATE$values$item$`19`
+Louisiana = vars_list$variables$STATE$values$item$`22`
+North_Dakota = vars_list$variables$STATE$values$item$`38`
+Alabama = vars_list$variables$STATE$values$item$`01`
+Alaska = vars_list$variables$STATE$values$item$`02`
+California = vars_list$variables$STATE$values$item$`06`
+Colorado = vars_list$variables$STATE$values$item$`08`
+District_of_Columbia = vars_list$variables$STATE$values$item$`11`
+Maine = vars_list$variables$STATE$values$item$`23`
+New_Jersey = vars_list$variables$STATE$values$item$`34`
+Ohio = vars_list$variables$STATE$values$item$`39`
+Delaware = vars_list$variables$STATE$values$item$`10`
+Wyoming = vars_list$variables$STATE$values$item$`56`
+Kentucky = vars_list$variables$STATE$values$item$`21`
+Maryland = vars_list$variables$STATE$values$item$`24`
+Rhode_Island = vars_list$variables$STATE$values$item$`44`
+South_Dakota = vars_list$variables$STATE$values$item$`46`
+Illinois = vars_list$variables$STATE$values$item$`17`
+Missouri = vars_list$variables$STATE$values$item$`29`
+Nebraska = vars_list$variables$STATE$values$item$`31`
+New_York = vars_list$variables$STATE$values$item$`36`
+Oklahoma = vars_list$variables$STATE$values$item$`40`
+Oregon = vars_list$variables$STATE$values$item$`41`
+state_list <- list(Tennessee = Tennessee, Arizona = Arizona, Arkansas = Arkansas, Utah = Utah, Connecticut = Connecticut, Vermont = Vermont, Mississippi = Mississippi, North_Carolina = North_Carolina, Pennsylvania = Pennsylvania, South_Carolina = South_Carolina, Virginia = Virginia, Hawaii = Hawaii, Massachusetts = Massachusetts, Puerto_Rico = Puerto_Rico, Montana = Montana, New_Hampshire = New_Hampshire, New_Mexico = New_Mexico, Florida = Florida, Texas = Texas, Washington = Washington, Georgia = Georgia, Indiana = Indiana, Kansas = Kansas, Michigan = Michigan, Nevada = Nevada, West_Virginia = West_Virginia, Wisconsin = Wisconsin, Minnesota = Minnesota, Idaho = Idaho, Iowa = Iowa, Louisiana = Louisiana, North_Dakota = North_Dakota, Alabama = Alabama, Alaska = Alaska, California = California, Colorado = Colorado, District_of_Columbia = District_of_Columbia, Maine = Maine, New_Jersey = New_Jersey, Ohio = Ohio, Delaware = Delaware, Wyoming = Wyoming, Kentucky = Kentucky, Maryland = Maryland, Rhode_Island = Rhode_Island, South_Dakota = South_Dakota, Illinois = Illinois, Missouri = Missouri, Nebraska = Nebraska, New_York = New_York, Oklahoma = Oklahoma, Oregon = Oregon)
+if(all_values){
+  return(state_list)
+}else{
+  return(state_list[[target_var]])
 }
-#Testing
-test_st <- subset_st(2021)
+}
+#Examples of how to use these functions
+test_st <- subset_st(2021, 'Alabama', all_values = FALSE)
 test_st
 
-test_state <- subset_state(2024)
+test_state <- subset_state(2024, 'Tennessee', all_values = FALSE)
 test_state
 ```
 
 ```{r}
 #Writing the division function
-subset_division <- function(year){
+subset_division <- function(year, target_var = 'Puerto_Rico', all_values = FALSE){
 rds <- paste0(year, '_variables.rds')
 vars_list <- readRDS(rds)
-division = vars_list$variables$DIVISION
-return(division)
+West_South_Central_South_Region = vars_list$variables$DIVISION$values$item$`7`
+Middle_Atlantic_Northeast_Region = vars_list$variables$DIVISION$values$item$`2`
+West_North_Central_Midwest_Region = vars_list$variables$DIVISION$values$item$`4`
+East_South_Central_South_Region = vars_list$variables$DIVISION$values$item$`6`
+East_North_Central_Midwest_Region = vars_list$variables$DIVISION$values$item$`3`
+Pacific_West_Region = vars_list$variables$DIVISION$values$item$`9`
+Puerto_Rico = vars_list$variables$DIVISION$values$item$`0`
+South_Atlantic_South_Region = vars_list$variables$DIVISION$values$item$`5`
+Mountain_West_Region = vars_list$variables$DIVISION$values$item$`8`
+New_England_Northeast_Region = vars_list$variables$DIVISION$values$item$`1`
+div_list <- list(West_South_Central_South_Region = West_South_Central_South_Region, Middle_Atlantic_Northeast_Region = Middle_Atlantic_Northeast_Region, West_North_Central_Midwest_Region = West_North_Central_Midwest_Region, East_South_Central_South_Region = East_South_Central_South_Region, East_North_Central_Midwest_Region = East_North_Central_Midwest_Region, Pacific_West_Region = Pacific_West_Region, Puerto_Rico = Puerto_Rico, South_Atlantic_South_Region = South_Atlantic_South_Region, Mountain_West_Region = Mountain_West_Region, New_England_Northeast_Region = New_England_Northeast_Region)
+if(all_values){
+  return(div_list)
+}else{
+  return(div_list[[target_var]])
 }
-#Testing
-test_division <- subset_division(2022)
+}
+#Example of how to use this function
+test_division <- subset_division(2022, target_var = 'Mountain_West_Region', all_values = FALSE)
 test_division
 ```
 
-## PUTTING EVERYTHING TOGETHER
+*The project rubric mentions that all of these functions are supposed to be wrapped into one big function. I tried many times to make this function but I was not able to get it to work. Every one that I would write would return the wrong information or an error. The functions listed below are the closest I was able to get.*
 
-*There are two different main functions because of the presence of different variables for state depending on the year.*
-
-*Listed here is the first one*
+*This is the first function for the years 2021 and 2022.*
 
 ```{r}
 nested_function_21_22 <- function(year,...){
@@ -463,189 +621,6 @@ processed <- variables_df |>
   select(midpoint_time)
 print(processed)
   }
-  return_JWAP <- function(year){
-variables <- paste0(year, '_variables.rds')
-variables_list <- readRDS(variables)
-variables_df <- data.frame(
-  data = unlist(variables_list$variables$JWAP$values$item),
-  stringsAsFactors = FALSE
-)
-
-to_minutes <- function(time_str, am_pm){
-  parts <- str_split(time_str, ':', simplify = TRUE)
-  hours <- as.numeric(parts[, 1])
-  minutes <- as.numeric(parts[, 2])
-  
-  is_pm <- str_detect(am_pm, 'p')
-  
-  hours <- case_when(
-    is_pm & hours != 12 ~ hours + 12,
-    !is_pm & hours == 12 ~ 0,
-    TRUE                 ~ hours
-  )
-  return(hours * 60 + minutes)
-}
-processed <- variables_df |>
-  mutate(
-    start_time = str_extract(data, "^\\d{1,2}:\\d{2}"),
-    start_ampm = str_extract(data, "^\\d{1,2}:\\d{2}\\s*[ap]\\.m\\."),
-    end_time = str_extract(data, "\\d{1,2}:\\d{2}\\s*[ap]\\.m\\.$") %>% str_extract("^\\d{1,2}:\\d{2}"),
-    end_ampm = str_extract(data, "\\d{1,2}:\\d{2}\\s*[ap]\\.m\\.$"),
-    start_mins = to_minutes(start_time, start_ampm),
-    end_mins = to_minutes(end_time, end_ampm),
-    end_mins = if_else(end_mins < start_mins, end_mins + 1440, end_mins),
-    midpoint_mins = (start_mins + end_mins) / 2,
-    midpoint_mins = midpoint_mins %% 1440,
-    midpoint_time = sprintf("%02d:%02d", floor(midpoint_mins / 60), round(midpoint_mins %% 60))
-  ) |>
-  select(midpoint_time)
-print(processed)
-}
-
-#Writing code to return midpoint of JWDP
-return_JWDP <- function(year){
-  variables <- paste0(year, '_variables.rds')
-variables_list <- readRDS(variables)
-variables_df <- data.frame(
-  data = unlist(variables_list$variables$JWDP$values$item),
-  stringsAsFactors = FALSE
-)
-
-to_minutes <- function(time_str, am_pm){
-  parts <- str_split(time_str, ':', simplify = TRUE)
-  hours <- as.numeric(parts[, 1])
-  minutes <- as.numeric(parts[, 2])
-  
-  is_pm <- str_detect(am_pm, 'p')
-  
-  hours <- case_when(
-    is_pm & hours != 12 ~ hours + 12,
-    !is_pm & hours == 12 ~ 0,
-    TRUE                 ~ hours
-  )
-  return(hours * 60 + minutes)
-}
-processed <- variables_df |>
-  mutate(
-    start_time = str_extract(data, "^\\d{1,2}:\\d{2}"),
-    start_ampm = str_extract(data, "^\\d{1,2}:\\d{2}\\s*[ap]\\.m\\."),
-    end_time = str_extract(data, "\\d{1,2}:\\d{2}\\s*[ap]\\.m\\.$") %>% str_extract("^\\d{1,2}:\\d{2}"),
-    end_ampm = str_extract(data, "\\d{1,2}:\\d{2}\\s*[ap]\\.m\\.$"),
-    start_mins = to_minutes(start_time, start_ampm),
-    end_mins = to_minutes(end_time, end_ampm),
-    end_mins = if_else(end_mins < start_mins, end_mins + 1440, end_mins),
-    midpoint_mins = (start_mins + end_mins) / 2,
-    midpoint_mins = midpoint_mins %% 1440,
-    midpoint_time = sprintf("%02d:%02d", floor(midpoint_mins / 60), round(midpoint_mins %% 60))
-  ) |>
-  select(midpoint_time)
-print(processed)
-}
-return_cat_vars <- function(year, target_var = 'SEX'){
-rds <- paste0(year, '_variables.rds')
-var_list <- readRDS(rds)
-FER = factor(unlist(var_list$variables$FER))
-HHL = factor(unlist(var_list$variables$HHL))
-SCH = factor(unlist(var_list$variables$SCH))
-SCHL = factor(unlist(var_list$variables$SCHL))
-SEX = factor(unlist(var_list$variables$SEX))
-var_list <- list(FER = FER, HHL = HHL, SCH = SCH, SCHL = SCHL, SEX = SEX)
-return(var_list[target_var])
-}
-geography_level <- function(year, target_var = 'REGION'){
-rds <- paste0(year, '_variables.rds')
-vars_list <- readRDS(rds)
-REGION = vars_list$variables$REGION
-STATE = vars_list$variables$STATE
-DIVISION = vars_list$variables$DIVISION
-geo_list <- list(REGION = REGION, STATE = STATE, DIVISION = DIVISION)
-return(geo_list[target_var])
-}
-subset_region <- function(year){
-rds <- paste0(year, '_variables.rds')
-vars_list <- readRDS(rds)
-region = vars_list$variables$REGION
-return(region)
-}
-subset_st <- function(year){
-rds <- paste0(year, '_variables.rds')
-vars_list <- readRDS(rds)
-state = vars_list$variables$ST
-return(state)
-}
-subset_division <- function(year){
-rds <- paste0(year, '_variables.rds')
-vars_list <- readRDS(rds)
-division = vars_list$variables$DIVISION
-return(division)
-}
-}
-
-final_test <- main_function_21_22(2022, target_var = 'FER')
-str(final_test)
-```
-
-*This is the second one.*
-
-```{r}
-nested_function_23_24 <- function(year,...){
-  return_date <- function(year = 2024){
-  rds <- paste0(year, '_variables.rds')
-  variables <- readRDS(rds)
-  return(variables)
-  }
-  return_num_vars <- function(year, target_var = 'AGEP'){
-  rds <- paste0(year, "_variables.rds")
-  var_list <- readRDS(rds)
-  PWGTP = c(var_list$variables$PWGTP$values$range$min, var_list$variables$PWGTP$values$range$max)
-  AGEP = c(var_list$variables$AGEP$values$range$min, var_list$variables$AGEP$values$range$max)
-  GASP = c(var_list$variables$GASP$values$range$min, var_list$variables$GASP$values$range$max)
-  GRPIP = c(var_list$variables$GRPIP$values$range$min, var_list$variables$GRPIP$values$range$max)
-  JWMNP = c(var_list$variables$JWMNP$values$range$min, var_list$variables$JWMNP$values$range$max)
-  full_list <- list(AGEP = AGEP, GASP = GASP, GRPIP = GRPIP, JWMNP = JWMNP, PWGTP = PWGTP)
-  num_list <- lapply(full_list, as.numeric, na.rm = TRUE)
-  return(list(num_list['PWGTP'], num_list[target_var]))
-}
-
-  return_JWAP <- function(year){
-variables <- paste0(year, '_variables.rds')
-variables_list <- readRDS(variables)
-variables_df <- data.frame(
-  data = unlist(variables_list$variables$JWAP$values$item),
-  stringsAsFactors = FALSE
-)
-
-to_minutes <- function(time_str, am_pm){
-  parts <- str_split(time_str, ':', simplify = TRUE)
-  hours <- as.numeric(parts[, 1])
-  minutes <- as.numeric(parts[, 2])
-  
-  is_pm <- str_detect(am_pm, 'p')
-  
-  hours <- case_when(
-    is_pm & hours != 12 ~ hours + 12,
-    !is_pm & hours == 12 ~ 0,
-    TRUE                 ~ hours
-  )
-  return(hours * 60 + minutes)
-}
-processed <- variables_df |>
-  mutate(
-    start_time = str_extract(data, "^\\d{1,2}:\\d{2}"),
-    start_ampm = str_extract(data, "^\\d{1,2}:\\d{2}\\s*[ap]\\.m\\."),
-    end_time = str_extract(data, "\\d{1,2}:\\d{2}\\s*[ap]\\.m\\.$") %>% str_extract("^\\d{1,2}:\\d{2}"),
-    end_ampm = str_extract(data, "\\d{1,2}:\\d{2}\\s*[ap]\\.m\\.$"),
-    start_mins = to_minutes(start_time, start_ampm),
-    end_mins = to_minutes(end_time, end_ampm),
-    end_mins = if_else(end_mins < start_mins, end_mins + 1440, end_mins),
-    midpoint_mins = (start_mins + end_mins) / 2,
-    midpoint_mins = midpoint_mins %% 1440,
-    midpoint_time = sprintf("%02d:%02d", floor(midpoint_mins / 60), round(midpoint_mins %% 60))
-  ) |>
-  select(midpoint_time)
-print(processed)
-}
-
   return_JWDP <- function(year){
   variables <- paste0(year, '_variables.rds')
 variables_list <- readRDS(variables)
@@ -693,43 +668,358 @@ SCH = factor(unlist(var_list$variables$SCH))
 SCHL = factor(unlist(var_list$variables$SCHL))
 SEX = factor(unlist(var_list$variables$SEX))
 var_list <- list(FER = FER, HHL = HHL, SCH = SCH, SCHL = SCHL, SEX = SEX)
-return(var_list[target_var])
+return(var_list[[target_var]])
   }
-  geography_level <- function(year, target_var = 'REGION'){
+  geography_level <- function(year, target_var = 'REGION', all_values = FALSE){
+rds <- paste0(year, '_variables.rds')
+vars_list <- readRDS(rds)
+REGION = vars_list$variables$REGION
+ST = vars_list$variables$ST
+DIVISION = vars_list$variables$DIVISION
+geo_list <- list(REGION = REGION, ST = ST, DIVISION = DIVISION)
+if(all_values){
+  return('ERROR')
+}else{
+  return(geo_list[[target_var]])
+}
+  }
+  subset_region <- function(year, target_var = 'Northeast', all_values = FALSE){
+rds <- paste0(year, '_variables.rds')
+vars_list <- readRDS(rds)
+Northeast = vars_list$variables$REGION$values$item$`1`
+Puerto_Rico = vars_list$variables$REGION$values$item$`9`
+South = vars_list$variables$REGION$values$item$`3`
+West = vars_list$variables$REGION$values$item$`4`
+Midwest = vars_list$variables$REGION$values$item$`2`
+region_list <- list(Northeast = Northeast, Puerto_Rico = Puerto_Rico, South = South, West = West, Midwest = Midwest)
+if(all_values){
+  return(region_list)
+}else{
+  return(region_list[[target_var]])
+}
+  }
+  subset_st <- function(year, target_var = 'North_Carolina', all_values = FALSE){
+rds <- paste0(year, '_variables.rds')
+vars_list <- readRDS(rds)
+Tennessee = vars_list$variables$ST$values$item$`47`
+Arizona = vars_list$variables$ST$values$item$`04`
+Arkansas = vars_list$variables$ST$values$item$`05`
+Utah = vars_list$variables$ST$values$item$`49`
+Connecticut = vars_list$variables$ST$values$item$`09`
+Vermont = vars_list$variables$ST$values$item$`50`
+Mississippi = vars_list$variables$ST$values$item$`28`
+North_Carolina = vars_list$variables$ST$values$item$`37`
+Pennsylvania = vars_list$variables$ST$values$item$`42`
+South_Carolina = vars_list$variables$ST$values$item$`45`
+Virginia = vars_list$variables$ST$values$item$`51`
+Hawaii = vars_list$variables$ST$values$item$`15`
+Massachusetts = vars_list$variables$ST$values$item$`25`
+Puerto_Rico = vars_list$variables$ST$values$item$`72`
+Montana = vars_list$variables$ST$values$item$`30`
+New_Hampshire = vars_list$variables$ST$values$item$`33`
+New_Mexico = vars_list$variables$ST$values$item$`35`
+Florida = vars_list$variables$ST$values$item$`12`
+Texas = vars_list$variables$ST$values$item$`48`
+Washington = vars_list$variables$ST$values$item$`53`
+Georgia = vars_list$variables$ST$values$item$`13`
+Indiana = vars_list$variables$ST$values$item$`18`
+Kansas = vars_list$variables$ST$values$item$`20`
+Michigan = vars_list$variables$ST$values$item$`26`
+Nevada = vars_list$variables$ST$values$item$`32`
+West_Virginia = vars_list$variables$ST$values$item$`54`
+Wisconsin = vars_list$variables$ST$values$item$`55`
+Minnesota = vars_list$variables$ST$values$item$`27`
+Idaho = vars_list$variables$ST$values$item$`16`
+Iowa = vars_list$variables$ST$values$item$`19`
+Louisiana = vars_list$variables$ST$values$item$`22`
+North_Dakota = vars_list$variables$ST$values$item$`38`
+Alabama = vars_list$variables$ST$values$item$`01`
+Alaska = vars_list$variables$ST$values$item$`02`
+California = vars_list$variables$ST$values$item$`06`
+Colorado = vars_list$variables$ST$values$item$`08`
+District_of_Columbia = vars_list$variables$ST$values$item$`11`
+Maine = vars_list$variables$ST$values$item$`23`
+New_Jersey = vars_list$variables$ST$values$item$`34`
+Ohio = vars_list$variables$ST$values$item$`39`
+Delaware = vars_list$variables$ST$values$item$`10`
+Wyoming = vars_list$variables$ST$values$item$`56`
+Kentucky = vars_list$variables$ST$values$item$`21`
+Maryland = vars_list$variables$ST$values$item$`24`
+Rhode_Island = vars_list$variables$ST$values$item$`44`
+South_Dakota = vars_list$variables$ST$values$item$`46`
+Illinois = vars_list$variables$ST$values$item$`17`
+Missouri = vars_list$variables$ST$values$item$`29`
+Nebraska = vars_list$variables$ST$values$item$`31`
+New_York = vars_list$variables$ST$values$item$`36`
+Oklahoma = vars_list$variables$ST$values$item$`40`
+Oregon = vars_list$variables$ST$values$item$`41`
+st_list <- list(Tennessee = Tennessee, Arizona = Arizona, Arkansas = Arkansas, Utah = Utah, Connecticut = Connecticut, Vermont = Vermont, Mississippi = Mississippi, North_Carolina = North_Carolina, Pennsylvania = Pennsylvania, South_Carolina = South_Carolina, Virginia = Virginia, Hawaii = Hawaii, Massachusetts = Massachusetts, Puerto_Rico = Puerto_Rico, Montana = Montana, New_Hampshire = New_Hampshire, New_Mexico = New_Mexico, Florida = Florida, Texas = Texas, Washington = Washington, Georgia = Georgia, Indiana = Indiana, Kansas = Kansas, Michigan = Michigan, Nevada = Nevada, West_Virginia = West_Virginia, Wisconsin = Wisconsin, Minnesota = Minnesota, Idaho = Idaho, Iowa = Iowa, Louisiana = Louisiana, North_Dakota = North_Dakota, Alabama = Alabama, Alaska = Alaska, California = California, Colorado = Colorado, District_of_Columbia = District_of_Columbia, Maine = Maine, New_Jersey = New_Jersey, Ohio = Ohio, Delaware = Delaware, Wyoming = Wyoming, Kentucky = Kentucky, Maryland = Maryland, Rhode_Island = Rhode_Island, South_Dakota = South_Dakota, Illinois = Illinois, Missouri = Missouri, Nebraska = Nebraska, New_York = New_York, Oklahoma = Oklahoma, Oregon = Oregon)
+
+if(all_values){
+  return(st_list)
+}else{
+  return(st_list[[target_var]])
+}
+  }
+  subset_division <- function(year, target_var = 'Puerto_Rico', all_values = FALSE){
+rds <- paste0(year, '_variables.rds')
+vars_list <- readRDS(rds)
+West_South_Central_South_Region = vars_list$variables$DIVISION$values$item$`7`
+Middle_Atlantic_Northeast_Region = vars_list$variables$DIVISION$values$item$`2`
+West_North_Central_Midwest_Region = vars_list$variables$DIVISION$values$item$`4`
+East_South_Central_South_Region = vars_list$variables$DIVISION$values$item$`6`
+East_North_Central_Midwest_Region = vars_list$variables$DIVISION$values$item$`3`
+Pacific_West_Region = vars_list$variables$DIVISION$values$item$`9`
+Puerto_Rico = vars_list$variables$DIVISION$values$item$`0`
+South_Atlantic_South_Region = vars_list$variables$DIVISION$values$item$`5`
+Mountain_West_Region = vars_list$variables$DIVISION$values$item$`8`
+New_England_Northeast_Region = vars_list$variables$DIVISION$values$item$`1`
+div_list <- list(West_South_Central_South_Region = West_South_Central_South_Region, Middle_Atlantic_Northeast_Region = Middle_Atlantic_Northeast_Region, West_North_Central_Midwest_Region = West_North_Central_Midwest_Region, East_South_Central_South_Region = East_South_Central_South_Region, East_North_Central_Midwest_Region = East_North_Central_Midwest_Region, Pacific_West_Region = Pacific_West_Region, Puerto_Rico = Puerto_Rico, South_Atlantic_South_Region = South_Atlantic_South_Region, Mountain_West_Region = Mountain_West_Region, New_England_Northeast_Region = New_England_Northeast_Region)
+if(all_values){
+  return(div_list)
+}else{
+  return(div_list[[target_var]])
+}
+}
+
+}
+
+#This is how I was using this function
+nest_test <- nested_function_21_22(2021, return_JWAP)
+nest_test
+```
+
+*This is the second function for the years 2023 and 2024.*
+
+```{r}
+nested_function_23_24 <- function(year,...){
+  return_date <- function(year = 2024){
+  rds <- paste0(year, '_variables.rds')
+  variables <- readRDS(rds)
+  return(variables)
+  }
+  return_num_vars <- function(year, target_var = 'AGEP'){
+  rds <- paste0(year, "_variables.rds")
+  var_list <- readRDS(rds)
+  PWGTP = c(var_list$variables$PWGTP$values$range$min, var_list$variables$PWGTP$values$range$max)
+  AGEP = c(var_list$variables$AGEP$values$range$min, var_list$variables$AGEP$values$range$max)
+  GASP = c(var_list$variables$GASP$values$range$min, var_list$variables$GASP$values$range$max)
+  GRPIP = c(var_list$variables$GRPIP$values$range$min, var_list$variables$GRPIP$values$range$max)
+  JWMNP = c(var_list$variables$JWMNP$values$range$min, var_list$variables$JWMNP$values$range$max)
+  full_list <- list(AGEP = AGEP, GASP = GASP, GRPIP = GRPIP, JWMNP = JWMNP, PWGTP = PWGTP)
+  num_list <- lapply(full_list, as.numeric, na.rm = TRUE)
+  return(list(num_list['PWGTP'], num_list[target_var]))
+  }
+  return_JWAP <- function(year){
+variables <- paste0(year, '_variables.rds')
+variables_list <- readRDS(variables)
+variables_df <- data.frame(
+  data = unlist(variables_list$variables$JWAP$values$item),
+  stringsAsFactors = FALSE
+)
+
+to_minutes <- function(time_str, am_pm){
+  parts <- str_split(time_str, ':', simplify = TRUE)
+  hours <- as.numeric(parts[, 1])
+  minutes <- as.numeric(parts[, 2])
+  
+  is_pm <- str_detect(am_pm, 'p')
+  
+  hours <- case_when(
+    is_pm & hours != 12 ~ hours + 12,
+    !is_pm & hours == 12 ~ 0,
+    TRUE                 ~ hours
+  )
+  return(hours * 60 + minutes)
+}
+processed <- variables_df |>
+  mutate(
+    start_time = str_extract(data, "^\\d{1,2}:\\d{2}"),
+    start_ampm = str_extract(data, "^\\d{1,2}:\\d{2}\\s*[ap]\\.m\\."),
+    end_time = str_extract(data, "\\d{1,2}:\\d{2}\\s*[ap]\\.m\\.$") %>% str_extract("^\\d{1,2}:\\d{2}"),
+    end_ampm = str_extract(data, "\\d{1,2}:\\d{2}\\s*[ap]\\.m\\.$"),
+    start_mins = to_minutes(start_time, start_ampm),
+    end_mins = to_minutes(end_time, end_ampm),
+    end_mins = if_else(end_mins < start_mins, end_mins + 1440, end_mins),
+    midpoint_mins = (start_mins + end_mins) / 2,
+    midpoint_mins = midpoint_mins %% 1440,
+    midpoint_time = sprintf("%02d:%02d", floor(midpoint_mins / 60), round(midpoint_mins %% 60))
+  ) |>
+  select(midpoint_time)
+print(processed)
+  }
+  return_JWDP <- function(year){
+  variables <- paste0(year, '_variables.rds')
+variables_list <- readRDS(variables)
+variables_df <- data.frame(
+  data = unlist(variables_list$variables$JWDP$values$item),
+  stringsAsFactors = FALSE
+)
+
+to_minutes <- function(time_str, am_pm){
+  parts <- str_split(time_str, ':', simplify = TRUE)
+  hours <- as.numeric(parts[, 1])
+  minutes <- as.numeric(parts[, 2])
+  
+  is_pm <- str_detect(am_pm, 'p')
+  
+  hours <- case_when(
+    is_pm & hours != 12 ~ hours + 12,
+    !is_pm & hours == 12 ~ 0,
+    TRUE                 ~ hours
+  )
+  return(hours * 60 + minutes)
+}
+processed <- variables_df |>
+  mutate(
+    start_time = str_extract(data, "^\\d{1,2}:\\d{2}"),
+    start_ampm = str_extract(data, "^\\d{1,2}:\\d{2}\\s*[ap]\\.m\\."),
+    end_time = str_extract(data, "\\d{1,2}:\\d{2}\\s*[ap]\\.m\\.$") %>% str_extract("^\\d{1,2}:\\d{2}"),
+    end_ampm = str_extract(data, "\\d{1,2}:\\d{2}\\s*[ap]\\.m\\.$"),
+    start_mins = to_minutes(start_time, start_ampm),
+    end_mins = to_minutes(end_time, end_ampm),
+    end_mins = if_else(end_mins < start_mins, end_mins + 1440, end_mins),
+    midpoint_mins = (start_mins + end_mins) / 2,
+    midpoint_mins = midpoint_mins %% 1440,
+    midpoint_time = sprintf("%02d:%02d", floor(midpoint_mins / 60), round(midpoint_mins %% 60))
+  ) |>
+  select(midpoint_time)
+print(processed)
+  }
+  return_cat_vars <- function(year, target_var = 'SEX'){
+rds <- paste0(year, '_variables.rds')
+var_list <- readRDS(rds)
+FER = factor(unlist(var_list$variables$FER))
+HHL = factor(unlist(var_list$variables$HHL))
+SCH = factor(unlist(var_list$variables$SCH))
+SCHL = factor(unlist(var_list$variables$SCHL))
+SEX = factor(unlist(var_list$variables$SEX))
+var_list <- list(FER = FER, HHL = HHL, SCH = SCH, SCHL = SCHL, SEX = SEX)
+return(var_list[[target_var]])
+  }
+  geography_level_2 <- function(year, target_var = 'REGION', all_values = FALSE){
 rds <- paste0(year, '_variables.rds')
 vars_list <- readRDS(rds)
 REGION = vars_list$variables$REGION
 STATE = vars_list$variables$STATE
 DIVISION = vars_list$variables$DIVISION
 geo_list <- list(REGION = REGION, STATE = STATE, DIVISION = DIVISION)
-return(geo_list[target_var])
+if(all_values){
+  return('ERROR')
+}else{
+  return(geo_list[[target_var]])
+}
   }
-  subset_region <- function(year){
+  subset_region <- function(year, target_var = 'Northeast', all_values = FALSE){
 rds <- paste0(year, '_variables.rds')
 vars_list <- readRDS(rds)
-region = vars_list$variables$REGION
-return(region)
+Northeast = vars_list$variables$REGION$values$item$`1`
+Puerto_Rico = vars_list$variables$REGION$values$item$`9`
+South = vars_list$variables$REGION$values$item$`3`
+West = vars_list$variables$REGION$values$item$`4`
+Midwest = vars_list$variables$REGION$values$item$`2`
+region_list <- list(Northeast = Northeast, Puerto_Rico = Puerto_Rico, South = South, West = West, Midwest = Midwest)
+if(all_values){
+  return(region_list)
+}else{
+  return(region_list[[target_var]])
+}
   }
-  subset_state <- function(year){
+  subset_state <- function(year, target_var = 'North_Carolina', all_values = FALSE){
 rds <- paste0(year, '_variables.rds')
 vars_list <- readRDS(rds)
-state = vars_list$variables$STATE
-return(state)
+Tennessee = vars_list$variables$STATE$values$item$`47`
+Arizona = vars_list$variables$STATE$values$item$`04`
+Arkansas = vars_list$variables$STATE$values$item$`05`
+Utah = vars_list$variables$STATE$values$item$`49`
+Connecticut = vars_list$variables$STATE$values$item$`09`
+Vermont = vars_list$variables$STATE$values$item$`50`
+Mississippi = vars_list$variables$STATE$values$item$`28`
+North_Carolina = vars_list$variables$STATE$values$item$`37`
+Pennsylvania = vars_list$variables$STATE$values$item$`42`
+South_Carolina = vars_list$variables$STATE$values$item$`45`
+Virginia = vars_list$variables$STATE$values$item$`51`
+Hawaii = vars_list$variables$STATE$values$item$`15`
+Massachusetts = vars_list$variables$STATE$values$item$`25`
+Puerto_Rico = vars_list$variables$STATE$values$item$`72`
+Montana = vars_list$variables$STATE$values$item$`30`
+New_Hampshire = vars_list$variables$STATE$values$item$`33`
+New_Mexico = vars_list$variables$STATE$values$item$`35`
+Florida = vars_list$variables$STATE$values$item$`12`
+Texas = vars_list$variables$STATE$values$item$`48`
+Washington = vars_list$variables$STATE$values$item$`53`
+Georgia = vars_list$variables$STATE$values$item$`13`
+Indiana = vars_list$variables$STATE$values$item$`18`
+Kansas = vars_list$variables$STATE$values$item$`20`
+Michigan = vars_list$variables$STATE$values$item$`26`
+Nevada = vars_list$variables$STATE$values$item$`32`
+West_Virginia = vars_list$variables$STATE$values$item$`54`
+Wisconsin = vars_list$variables$STATE$values$item$`55`
+Minnesota = vars_list$variables$STATE$values$item$`27`
+Idaho = vars_list$variables$STATE$values$item$`16`
+Iowa = vars_list$variables$STATE$values$item$`19`
+Louisiana = vars_list$variables$STATE$values$item$`22`
+North_Dakota = vars_list$variables$STATE$values$item$`38`
+Alabama = vars_list$variables$STATE$values$item$`01`
+Alaska = vars_list$variables$STATE$values$item$`02`
+California = vars_list$variables$STATE$values$item$`06`
+Colorado = vars_list$variables$STATE$values$item$`08`
+District_of_Columbia = vars_list$variables$STATE$values$item$`11`
+Maine = vars_list$variables$STATE$values$item$`23`
+New_Jersey = vars_list$variables$STATE$values$item$`34`
+Ohio = vars_list$variables$STATE$values$item$`39`
+Delaware = vars_list$variables$STATE$values$item$`10`
+Wyoming = vars_list$variables$STATE$values$item$`56`
+Kentucky = vars_list$variables$STATE$values$item$`21`
+Maryland = vars_list$variables$STATE$values$item$`24`
+Rhode_Island = vars_list$variables$STATE$values$item$`44`
+South_Dakota = vars_list$variables$STATE$values$item$`46`
+Illinois = vars_list$variables$STATE$values$item$`17`
+Missouri = vars_list$variables$STATE$values$item$`29`
+Nebraska = vars_list$variables$STATE$values$item$`31`
+New_York = vars_list$variables$STATE$values$item$`36`
+Oklahoma = vars_list$variables$STATE$values$item$`40`
+Oregon = vars_list$variables$STATE$values$item$`41`
+state_list <- list(Tennessee = Tennessee, Arizona = Arizona, Arkansas = Arkansas, Utah = Utah, Connecticut = Connecticut, Vermont = Vermont, Mississippi = Mississippi, North_Carolina = North_Carolina, Pennsylvania = Pennsylvania, South_Carolina = South_Carolina, Virginia = Virginia, Hawaii = Hawaii, Massachusetts = Massachusetts, Puerto_Rico = Puerto_Rico, Montana = Montana, New_Hampshire = New_Hampshire, New_Mexico = New_Mexico, Florida = Florida, Texas = Texas, Washington = Washington, Georgia = Georgia, Indiana = Indiana, Kansas = Kansas, Michigan = Michigan, Nevada = Nevada, West_Virginia = West_Virginia, Wisconsin = Wisconsin, Minnesota = Minnesota, Idaho = Idaho, Iowa = Iowa, Louisiana = Louisiana, North_Dakota = North_Dakota, Alabama = Alabama, Alaska = Alaska, California = California, Colorado = Colorado, District_of_Columbia = District_of_Columbia, Maine = Maine, New_Jersey = New_Jersey, Ohio = Ohio, Delaware = Delaware, Wyoming = Wyoming, Kentucky = Kentucky, Maryland = Maryland, Rhode_Island = Rhode_Island, South_Dakota = South_Dakota, Illinois = Illinois, Missouri = Missouri, Nebraska = Nebraska, New_York = New_York, Oklahoma = Oklahoma, Oregon = Oregon)
+if(all_values){
+  return(state_list)
+}else{
+  return(state_list[[target_var]])
+}
   }
-  subset_division <- function(year){
+  subset_division <- function(year, target_var = 'Puerto_Rico', all_values = FALSE){
 rds <- paste0(year, '_variables.rds')
 vars_list <- readRDS(rds)
-division = vars_list$variables$DIVISION
-return(division)
+West_South_Central_South_Region = vars_list$variables$DIVISION$values$item$`7`
+Middle_Atlantic_Northeast_Region = vars_list$variables$DIVISION$values$item$`2`
+West_North_Central_Midwest_Region = vars_list$variables$DIVISION$values$item$`4`
+East_South_Central_South_Region = vars_list$variables$DIVISION$values$item$`6`
+East_North_Central_Midwest_Region = vars_list$variables$DIVISION$values$item$`3`
+Pacific_West_Region = vars_list$variables$DIVISION$values$item$`9`
+Puerto_Rico = vars_list$variables$DIVISION$values$item$`0`
+South_Atlantic_South_Region = vars_list$variables$DIVISION$values$item$`5`
+Mountain_West_Region = vars_list$variables$DIVISION$values$item$`8`
+New_England_Northeast_Region = vars_list$variables$DIVISION$values$item$`1`
+div_list <- list(West_South_Central_South_Region = West_South_Central_South_Region, Middle_Atlantic_Northeast_Region = Middle_Atlantic_Northeast_Region, West_North_Central_Midwest_Region = West_North_Central_Midwest_Region, East_South_Central_South_Region = East_South_Central_South_Region, East_North_Central_Midwest_Region = East_North_Central_Midwest_Region, Pacific_West_Region = Pacific_West_Region, Puerto_Rico = Puerto_Rico, South_Atlantic_South_Region = South_Atlantic_South_Region, Mountain_West_Region = Mountain_West_Region, New_England_Northeast_Region = New_England_Northeast_Region)
+if(all_values){
+  return(div_list)
+}else{
+  return(div_list[[target_var]])
+}
   }
   
 }
 
+#This is how I was using this function.
+nest_test_2 <- nested_function_23_24(2023, return_JWAP)
+nest_test_2
 ```
 
 ## COMBINING YEARS
 
-*Writing function to specify multiple years of survey data. This function results in a HUGE amount of returned data. The only issue I had with this is that I frequently got an error saying that I needed to include a .name_repair argument in my as_tibble function.*
+*Writing function to specify multiple years of survey data.*
+
+*I am still not sure if this is correct but it's not returning an error, so at least it's functional. It returns a tibble that is made up of 4 lists of 525. I am not able to see any of the elements of these lists.*
 
 ```{r}
 #Copying the function that returns a single year into the same code chunk as the new function so that it all can be run together smoothly
@@ -745,14 +1035,14 @@ combine_years <- function(return_date, survey_years){
    for(i in seq_along(survey_years)){
      results[[i]] <- return_date(survey_years[i])
    }
-  tibble_results <- as_tibble(results, .name_repair = 'universal')
-  class_tibble <- class(tibble_results) <- c("census", class(tibble_results))
-  return(class_tibble)
+  tibble_results <- as_tibble(results, .name_repair = 'minimal')
+  class(tibble_results) <- c("census", class(tibble_results))
+  return(tibble_results)
 }
 
-#Testing it out, using str() as I expect that this will yield a very large tibble
+#Testing it out
 test_combine <- combine_years(return_date, c(2021, 2022, 2023, 2024))
-str(test_combine)
+test_combine
 ```
 
 # PART TWO: WRITING A GENERIC FUNCTION FOR SUMMARIZING
@@ -789,7 +1079,7 @@ summary.census <- function(year, numeric_var, cat_var){
   return(list(sample_mean, sample_std_dev, cat_var))
 }
 
-#Testing it out
+#A couple of examples of hwo to use these functions
 summary_test <- summary.census(2021, numeric_var = 'JWMNP', cat_var = 'HHL')
 summary_test
 
@@ -797,37 +1087,36 @@ summary_test_2 <- summary.census(2023, numeric_var = 'AGEP', cat_var = 'SEX')
 summary_test_2
 ```
 
-## GRAPHICAL SUMMARIES
+### INVESTIGATION
 
-\*The thing that gave me the most trouble with this part is that the x and y were different lengths.
+*For this section, I wanted to investigate the differences in the means and standard deviations of the GASP and GRPIP variables, as well as the counts of the SCHL language for both. I will be using data from the year 2024.*
 
 ```{r}
-boxplot.census <- function(year, categorical_var, numeric_var){
-  rds <- paste0(year, '_variables.rds')
-  var_list <- readRDS(rds)
-  
-  PWGTP = c(var_list$variables$PWGTP$values$range$min, var_list$variables$PWGTP$values$range$max)
-  AGEP = c(var_list$variables$AGEP$values$range$min, var_list$variables$AGEP$values$range$max)
-  GASP = c(var_list$variables$GASP$values$range$min, var_list$variables$GASP$values$range$max)
-  GRPIP = c(var_list$variables$GRPIP$values$range$min, var_list$variables$GRPIP$values$range$max)
-  JWMNP = c(var_list$variables$JWMNP$values$range$min, var_list$variables$JWMNP$values$range$max)
-  full_list <- list(AGEP = AGEP, GASP = GASP, GRPIP = GRPIP, JWMNP = JWMNP)
-  num_list <- lapply(full_list, as.numeric, na.rm = TRUE)
-  numerical_var <- num_list[numeric_var]
-  
-  YEAR_CAT <- factor(c(2021, 2022, 2023, 2024))
-  FER = factor(unlist(var_list$variables$FER$values$item))
-  HHL = factor(unlist(var_list$variables$HHL$values$item))
-  SCH = factor(unlist(var_list$variables$SCH$values$item))
-  SCHL = factor(unlist(var_list$variables$SCHL$values$item))
-  SEX = factor(unlist(var_list$variables$SEX$values$item))
-  cat_list <- list(FER = FER, HHL = HHL, SCH = SCH, SCHL = SCHL, SEX = SEX, YEAR_CAT = YEAR_CAT)
-  categorical_var <- cat_list[categorical_var]
+FER_SCHL_summary <- summary.census(2024, numeric_var = 'GASP', cat_var = 'SCHL')
+FER_SCHL_summary
+GRPIP_SCHL_summary <- summary.census(2024, numeric_var = 'GRPIP', cat_var = 'SCHL')
+GRPIP_SCHL_summary
+```
 
-  
-  return(plot('Numeric Variable at the Levels of the Categorical Variable', aes(x = categorical_var, y = numerical_var, fill = categorical_var, weight = 'PWGTP')))
+*The means returned varied greatly The GASP mean was 9,998 and the GRPIP mean was around 99.99. I suspect that there is something altering the* *value of the GASP mean, as there is no reason for someone's monthly gas expenses to be in the 9,000s. When looking at the SCHL values, I found* *that the demographic with the most responses was the Doctorate one, with 24 people in this category. Generally, it seems like a great majority of* *the people responding to this survey had been through some amount of college.*
+
+## GRAPHICAL SUMMARIES
+
+*I was not able to figure out how to get this one to work.*
+
+```{r}
+combined_census <- combine_years(return_date, c(2021,2022,2023,2024))
+
+
+boxplot.census <- function(year, categorical_var, numeric_var){
+  categorical_var <- combined_census[[categorical_var]]
+  numeric_var <- combined_census[[numeric_var]]
+
+  boxplot_result <- ggplot(data = combined_census, aes(x = categorical_var, y = numeric_var, fill = categorical_var, weight = 'PWGTP')) +
+    geom_boxplot()
+  return(boxplot_result)
 }
 
-boxplot_test <- boxplot.census(2021, categorical_var = 'HHL', numeric_var = 'GASP')
+boxplot_test <- boxplot.census(2021, categorical_var = 'SEX', numeric_var = 'AGEP')
 boxplot_test
 ```
