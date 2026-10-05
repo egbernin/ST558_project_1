@@ -4,6 +4,12 @@ format: html
 editor: visual
 ---
 
+### EMMA BERNINGER
+
+### TURNED IN: 10/5/2O26
+
+### PROJECT 1 FINAL CODE
+
 # PART 1: DATA PROCESSING
 
 ## PARSING VARIABLE VALUES
@@ -164,7 +170,7 @@ Code to be run
 
 } and so on.
 
-*I was having a lot of problems getting the right things to be returned with this. The functions themselves were also extremely long. I tried paste0 after seeing it in the reading for this class and it worked, so I was able to make the functions much shorter. I tried it with just the paste function but it ended up not working due to the space that it added.*
+*These functions turned out to be extremely long. I tried paste0 to make selecting the year of the data easier and it worked, so I was able to shorten them significantly.*
 
 ```{r}
 #Writing function to return year of survey
@@ -193,7 +199,7 @@ return_num_vars <- function(year, target_var = 'AGEP'){
   GASP = c(var_list$variables$GASP$values$range$min, var_list$variables$GASP$values$range$max)
   GRPIP = c(var_list$variables$GRPIP$values$range$min, var_list$variables$GRPIP$values$range$max)
   JWMNP = c(var_list$variables$JWMNP$values$range$min, var_list$variables$JWMNP$values$range$max)
-  full_list <- list(AGEP, GASP, GRPIP, JWMNP)
+  full_list <- list(AGEP = AGEP, GASP = GASP, GRPIP = GRPIP, JWMNP = JWMNP, PWGTP = PWGTP)
   num_list <- lapply(full_list, as.numeric, na.rm = TRUE)
   return(list(num_list['PWGTP'], num_list[target_var]))
 }
@@ -207,6 +213,7 @@ test_num
 *This was definitely the part that gave me the most trouble. There was a point where the function I was trying to write would cause RStudio to shut down and become completely unresponsive.*
 
 ```{r}
+#Writing code to return midpoint of JWAP
 return_JWAP <- function(year){
 variables <- paste0(year, '_variables.rds')
 variables_list <- readRDS(variables)
@@ -246,6 +253,7 @@ processed <- variables_df |>
 print(processed)
 }
 
+#Writing code to return midpoint of JWDP
 return_JWDP <- function(year){
   variables <- paste0(year, '_variables.rds')
 variables_list <- readRDS(variables)
@@ -285,38 +293,11 @@ processed <- variables_df |>
 print(processed)
 }
 
+#Testing everything out
 JWAP_test <- return_JWAP(2021)
 JWAP_test
 JWDP_test <- return_JWDP(2021)
 JWDP_test
-```
-
-```{r}
-#Testing out a way to change the data to the right form
-library(hms)
-library(lubridate)
-test_time <- readRDS('2021_variables.rds')
-test_col <- test_time$variables$JWAP$values$item[1]
-
-clean_time <- gsub('to|\\a.m.|\\p.m.|\\:|\\ ', '', test_col)
-
-split_1 <- str_sub(clean_time, start = 1, end = 3)
-split_1
-split_2 <- str_sub(clean_time, start = 4, end = 6)
-split_2
-num_1 <- as.numeric(split_1)
-num_1
-num_2 <- as.numeric(split_2)
-num_2
-num_vec <- c(num_1, num_2)
-mean <- mean(num_vec)
-mean
-time <- as.POSIXct(sprintf('%04d', mean), format = '%H%M')
-time
-new_time <- format(time, format = '%H:%M')
-new_time
-#This does work! This will be used as a reference going forward with writing this function
-
 ```
 
 *Writing functions to specify categorical variables to be returned.*
@@ -333,7 +314,7 @@ HHL = factor(unlist(var_list$variables$HHL))
 SCH = factor(unlist(var_list$variables$SCH))
 SCHL = factor(unlist(var_list$variables$SCHL))
 SEX = factor(unlist(var_list$variables$SEX))
-var_list <- list(FER, HHL, SCH, SCHL, SEX)
+var_list <- list(FER = FER, HHL = HHL, SCH = SCH, SCHL = SCHL, SEX = SEX)
 return(var_list[target_var])
 }
 
@@ -354,7 +335,7 @@ vars_list <- readRDS(rds)
 REGION = vars_list$variables$REGION
 STATE = vars_list$variables$STATE
 DIVISION = vars_list$variables$DIVISION
-geo_list <- list(REGION, STATE, DIVISION)
+geo_list <- list(REGION = REGION, STATE = STATE, DIVISION = DIVISION)
 return(geo_list[target_var])
 }
 
@@ -423,42 +404,327 @@ test_division
 
 *There are two different main functions because of the presence of different variables for state depending on the year.*
 
+*Listed here is the first one*
+
 ```{r}
-main_function_21_22 <- function(year){
+nested_function_21_22 <- function(year,...){
+  return_date <- function(year = 2024){
   rds <- paste0(year, '_variables.rds')
-  vars_list <- readRDS(rds)
-  final_date <- return_date(year)
-  final_num <- return_num_vars(year)
-  final_JWAP <- return_JWAP(year)
-  final_JWDP <- return_JWDP(year)
-  final_cat <- return_cat_vars(year)
-  final_geo <- return_geography(year)
-  final_region <- subset_region(year)
-  final_st <- subset_st(year)
-  final_division <- subset_division(year)
-  final_list <- list(final_date, final_num, final_JWAP, final_JWDP, final_cat, final_geo, final_region, final_st, final_division, final_list)
-  final_tibble <- as_tibble(final_list)
-  final_census <- class(final_tibble) <- c("census", class(final_tibble))
-  return(final_census)
+  variables <- readRDS(rds)
+  return(variables)
+  }
+  return_num_vars <- function(year, target_var = 'AGEP'){
+  rds <- paste0(year, "_variables.rds")
+  var_list <- readRDS(rds)
+  PWGTP = c(var_list$variables$PWGTP$values$range$min, var_list$variables$PWGTP$values$range$max)
+  AGEP = c(var_list$variables$AGEP$values$range$min, var_list$variables$AGEP$values$range$max)
+  GASP = c(var_list$variables$GASP$values$range$min, var_list$variables$GASP$values$range$max)
+  GRPIP = c(var_list$variables$GRPIP$values$range$min, var_list$variables$GRPIP$values$range$max)
+  JWMNP = c(var_list$variables$JWMNP$values$range$min, var_list$variables$JWMNP$values$range$max)
+  full_list <- list(AGEP = AGEP, GASP = GASP, GRPIP = GRPIP, JWMNP = JWMNP, PWGTP = PWGTP)
+  num_list <- lapply(full_list, as.numeric, na.rm = TRUE)
+  return(list(num_list['PWGTP'], num_list[target_var]))
+  }
+  return_JWAP <- function(year){
+variables <- paste0(year, '_variables.rds')
+variables_list <- readRDS(variables)
+variables_df <- data.frame(
+  data = unlist(variables_list$variables$JWAP$values$item),
+  stringsAsFactors = FALSE
+)
+
+to_minutes <- function(time_str, am_pm){
+  parts <- str_split(time_str, ':', simplify = TRUE)
+  hours <- as.numeric(parts[, 1])
+  minutes <- as.numeric(parts[, 2])
+  
+  is_pm <- str_detect(am_pm, 'p')
+  
+  hours <- case_when(
+    is_pm & hours != 12 ~ hours + 12,
+    !is_pm & hours == 12 ~ 0,
+    TRUE                 ~ hours
+  )
+  return(hours * 60 + minutes)
+}
+processed <- variables_df |>
+  mutate(
+    start_time = str_extract(data, "^\\d{1,2}:\\d{2}"),
+    start_ampm = str_extract(data, "^\\d{1,2}:\\d{2}\\s*[ap]\\.m\\."),
+    end_time = str_extract(data, "\\d{1,2}:\\d{2}\\s*[ap]\\.m\\.$") %>% str_extract("^\\d{1,2}:\\d{2}"),
+    end_ampm = str_extract(data, "\\d{1,2}:\\d{2}\\s*[ap]\\.m\\.$"),
+    start_mins = to_minutes(start_time, start_ampm),
+    end_mins = to_minutes(end_time, end_ampm),
+    end_mins = if_else(end_mins < start_mins, end_mins + 1440, end_mins),
+    midpoint_mins = (start_mins + end_mins) / 2,
+    midpoint_mins = midpoint_mins %% 1440,
+    midpoint_time = sprintf("%02d:%02d", floor(midpoint_mins / 60), round(midpoint_mins %% 60))
+  ) |>
+  select(midpoint_time)
+print(processed)
+  }
+  return_JWAP <- function(year){
+variables <- paste0(year, '_variables.rds')
+variables_list <- readRDS(variables)
+variables_df <- data.frame(
+  data = unlist(variables_list$variables$JWAP$values$item),
+  stringsAsFactors = FALSE
+)
+
+to_minutes <- function(time_str, am_pm){
+  parts <- str_split(time_str, ':', simplify = TRUE)
+  hours <- as.numeric(parts[, 1])
+  minutes <- as.numeric(parts[, 2])
+  
+  is_pm <- str_detect(am_pm, 'p')
+  
+  hours <- case_when(
+    is_pm & hours != 12 ~ hours + 12,
+    !is_pm & hours == 12 ~ 0,
+    TRUE                 ~ hours
+  )
+  return(hours * 60 + minutes)
+}
+processed <- variables_df |>
+  mutate(
+    start_time = str_extract(data, "^\\d{1,2}:\\d{2}"),
+    start_ampm = str_extract(data, "^\\d{1,2}:\\d{2}\\s*[ap]\\.m\\."),
+    end_time = str_extract(data, "\\d{1,2}:\\d{2}\\s*[ap]\\.m\\.$") %>% str_extract("^\\d{1,2}:\\d{2}"),
+    end_ampm = str_extract(data, "\\d{1,2}:\\d{2}\\s*[ap]\\.m\\.$"),
+    start_mins = to_minutes(start_time, start_ampm),
+    end_mins = to_minutes(end_time, end_ampm),
+    end_mins = if_else(end_mins < start_mins, end_mins + 1440, end_mins),
+    midpoint_mins = (start_mins + end_mins) / 2,
+    midpoint_mins = midpoint_mins %% 1440,
+    midpoint_time = sprintf("%02d:%02d", floor(midpoint_mins / 60), round(midpoint_mins %% 60))
+  ) |>
+  select(midpoint_time)
+print(processed)
 }
 
-main_function_23_24 <- function(year){
-  rds <- paste0(year, '_variables.rds')
-  vars_list <- readRDS(rds)
-  final_date <- return_date(year)
-  final_num <- return_num_vars(year)
-  final_JWAP <- return_JWAP(year)
-  final_JWDP <- return_JWDP(year)
-  final_cat <- return_cat_vars(year)
-  final_geo <- return_geography(year)
-  final_region <- subset_region(year)
-  final_state <- subset_state(year)
-  final_division <- subset_division(year)
-  final_list <- list(final_date, final_num, final_JWAP, final_JWDP, final_cat, final_geo, final_region, final_state, final_division, final_list)
-  final_tibble <- as_tibble(final_list)
-  final_census <- class(final_tibble) <- c("census", class(final_tibble))
-  return(final_census)
+#Writing code to return midpoint of JWDP
+return_JWDP <- function(year){
+  variables <- paste0(year, '_variables.rds')
+variables_list <- readRDS(variables)
+variables_df <- data.frame(
+  data = unlist(variables_list$variables$JWDP$values$item),
+  stringsAsFactors = FALSE
+)
+
+to_minutes <- function(time_str, am_pm){
+  parts <- str_split(time_str, ':', simplify = TRUE)
+  hours <- as.numeric(parts[, 1])
+  minutes <- as.numeric(parts[, 2])
+  
+  is_pm <- str_detect(am_pm, 'p')
+  
+  hours <- case_when(
+    is_pm & hours != 12 ~ hours + 12,
+    !is_pm & hours == 12 ~ 0,
+    TRUE                 ~ hours
+  )
+  return(hours * 60 + minutes)
 }
+processed <- variables_df |>
+  mutate(
+    start_time = str_extract(data, "^\\d{1,2}:\\d{2}"),
+    start_ampm = str_extract(data, "^\\d{1,2}:\\d{2}\\s*[ap]\\.m\\."),
+    end_time = str_extract(data, "\\d{1,2}:\\d{2}\\s*[ap]\\.m\\.$") %>% str_extract("^\\d{1,2}:\\d{2}"),
+    end_ampm = str_extract(data, "\\d{1,2}:\\d{2}\\s*[ap]\\.m\\.$"),
+    start_mins = to_minutes(start_time, start_ampm),
+    end_mins = to_minutes(end_time, end_ampm),
+    end_mins = if_else(end_mins < start_mins, end_mins + 1440, end_mins),
+    midpoint_mins = (start_mins + end_mins) / 2,
+    midpoint_mins = midpoint_mins %% 1440,
+    midpoint_time = sprintf("%02d:%02d", floor(midpoint_mins / 60), round(midpoint_mins %% 60))
+  ) |>
+  select(midpoint_time)
+print(processed)
+}
+return_cat_vars <- function(year, target_var = 'SEX'){
+rds <- paste0(year, '_variables.rds')
+var_list <- readRDS(rds)
+FER = factor(unlist(var_list$variables$FER))
+HHL = factor(unlist(var_list$variables$HHL))
+SCH = factor(unlist(var_list$variables$SCH))
+SCHL = factor(unlist(var_list$variables$SCHL))
+SEX = factor(unlist(var_list$variables$SEX))
+var_list <- list(FER = FER, HHL = HHL, SCH = SCH, SCHL = SCHL, SEX = SEX)
+return(var_list[target_var])
+}
+geography_level <- function(year, target_var = 'REGION'){
+rds <- paste0(year, '_variables.rds')
+vars_list <- readRDS(rds)
+REGION = vars_list$variables$REGION
+STATE = vars_list$variables$STATE
+DIVISION = vars_list$variables$DIVISION
+geo_list <- list(REGION = REGION, STATE = STATE, DIVISION = DIVISION)
+return(geo_list[target_var])
+}
+subset_region <- function(year){
+rds <- paste0(year, '_variables.rds')
+vars_list <- readRDS(rds)
+region = vars_list$variables$REGION
+return(region)
+}
+subset_st <- function(year){
+rds <- paste0(year, '_variables.rds')
+vars_list <- readRDS(rds)
+state = vars_list$variables$ST
+return(state)
+}
+subset_division <- function(year){
+rds <- paste0(year, '_variables.rds')
+vars_list <- readRDS(rds)
+division = vars_list$variables$DIVISION
+return(division)
+}
+}
+
+final_test <- main_function_21_22(2022, target_var = 'FER')
+str(final_test)
+```
+
+*This is the second one.*
+
+```{r}
+nested_function_23_24 <- function(year,...){
+  return_date <- function(year = 2024){
+  rds <- paste0(year, '_variables.rds')
+  variables <- readRDS(rds)
+  return(variables)
+  }
+  return_num_vars <- function(year, target_var = 'AGEP'){
+  rds <- paste0(year, "_variables.rds")
+  var_list <- readRDS(rds)
+  PWGTP = c(var_list$variables$PWGTP$values$range$min, var_list$variables$PWGTP$values$range$max)
+  AGEP = c(var_list$variables$AGEP$values$range$min, var_list$variables$AGEP$values$range$max)
+  GASP = c(var_list$variables$GASP$values$range$min, var_list$variables$GASP$values$range$max)
+  GRPIP = c(var_list$variables$GRPIP$values$range$min, var_list$variables$GRPIP$values$range$max)
+  JWMNP = c(var_list$variables$JWMNP$values$range$min, var_list$variables$JWMNP$values$range$max)
+  full_list <- list(AGEP = AGEP, GASP = GASP, GRPIP = GRPIP, JWMNP = JWMNP, PWGTP = PWGTP)
+  num_list <- lapply(full_list, as.numeric, na.rm = TRUE)
+  return(list(num_list['PWGTP'], num_list[target_var]))
+}
+
+  return_JWAP <- function(year){
+variables <- paste0(year, '_variables.rds')
+variables_list <- readRDS(variables)
+variables_df <- data.frame(
+  data = unlist(variables_list$variables$JWAP$values$item),
+  stringsAsFactors = FALSE
+)
+
+to_minutes <- function(time_str, am_pm){
+  parts <- str_split(time_str, ':', simplify = TRUE)
+  hours <- as.numeric(parts[, 1])
+  minutes <- as.numeric(parts[, 2])
+  
+  is_pm <- str_detect(am_pm, 'p')
+  
+  hours <- case_when(
+    is_pm & hours != 12 ~ hours + 12,
+    !is_pm & hours == 12 ~ 0,
+    TRUE                 ~ hours
+  )
+  return(hours * 60 + minutes)
+}
+processed <- variables_df |>
+  mutate(
+    start_time = str_extract(data, "^\\d{1,2}:\\d{2}"),
+    start_ampm = str_extract(data, "^\\d{1,2}:\\d{2}\\s*[ap]\\.m\\."),
+    end_time = str_extract(data, "\\d{1,2}:\\d{2}\\s*[ap]\\.m\\.$") %>% str_extract("^\\d{1,2}:\\d{2}"),
+    end_ampm = str_extract(data, "\\d{1,2}:\\d{2}\\s*[ap]\\.m\\.$"),
+    start_mins = to_minutes(start_time, start_ampm),
+    end_mins = to_minutes(end_time, end_ampm),
+    end_mins = if_else(end_mins < start_mins, end_mins + 1440, end_mins),
+    midpoint_mins = (start_mins + end_mins) / 2,
+    midpoint_mins = midpoint_mins %% 1440,
+    midpoint_time = sprintf("%02d:%02d", floor(midpoint_mins / 60), round(midpoint_mins %% 60))
+  ) |>
+  select(midpoint_time)
+print(processed)
+}
+
+  return_JWDP <- function(year){
+  variables <- paste0(year, '_variables.rds')
+variables_list <- readRDS(variables)
+variables_df <- data.frame(
+  data = unlist(variables_list$variables$JWDP$values$item),
+  stringsAsFactors = FALSE
+)
+
+to_minutes <- function(time_str, am_pm){
+  parts <- str_split(time_str, ':', simplify = TRUE)
+  hours <- as.numeric(parts[, 1])
+  minutes <- as.numeric(parts[, 2])
+  
+  is_pm <- str_detect(am_pm, 'p')
+  
+  hours <- case_when(
+    is_pm & hours != 12 ~ hours + 12,
+    !is_pm & hours == 12 ~ 0,
+    TRUE                 ~ hours
+  )
+  return(hours * 60 + minutes)
+}
+processed <- variables_df |>
+  mutate(
+    start_time = str_extract(data, "^\\d{1,2}:\\d{2}"),
+    start_ampm = str_extract(data, "^\\d{1,2}:\\d{2}\\s*[ap]\\.m\\."),
+    end_time = str_extract(data, "\\d{1,2}:\\d{2}\\s*[ap]\\.m\\.$") %>% str_extract("^\\d{1,2}:\\d{2}"),
+    end_ampm = str_extract(data, "\\d{1,2}:\\d{2}\\s*[ap]\\.m\\.$"),
+    start_mins = to_minutes(start_time, start_ampm),
+    end_mins = to_minutes(end_time, end_ampm),
+    end_mins = if_else(end_mins < start_mins, end_mins + 1440, end_mins),
+    midpoint_mins = (start_mins + end_mins) / 2,
+    midpoint_mins = midpoint_mins %% 1440,
+    midpoint_time = sprintf("%02d:%02d", floor(midpoint_mins / 60), round(midpoint_mins %% 60))
+  ) |>
+  select(midpoint_time)
+print(processed)
+  }
+  return_cat_vars <- function(year, target_var = 'SEX'){
+rds <- paste0(year, '_variables.rds')
+var_list <- readRDS(rds)
+FER = factor(unlist(var_list$variables$FER))
+HHL = factor(unlist(var_list$variables$HHL))
+SCH = factor(unlist(var_list$variables$SCH))
+SCHL = factor(unlist(var_list$variables$SCHL))
+SEX = factor(unlist(var_list$variables$SEX))
+var_list <- list(FER = FER, HHL = HHL, SCH = SCH, SCHL = SCHL, SEX = SEX)
+return(var_list[target_var])
+  }
+  geography_level <- function(year, target_var = 'REGION'){
+rds <- paste0(year, '_variables.rds')
+vars_list <- readRDS(rds)
+REGION = vars_list$variables$REGION
+STATE = vars_list$variables$STATE
+DIVISION = vars_list$variables$DIVISION
+geo_list <- list(REGION = REGION, STATE = STATE, DIVISION = DIVISION)
+return(geo_list[target_var])
+  }
+  subset_region <- function(year){
+rds <- paste0(year, '_variables.rds')
+vars_list <- readRDS(rds)
+region = vars_list$variables$REGION
+return(region)
+  }
+  subset_state <- function(year){
+rds <- paste0(year, '_variables.rds')
+vars_list <- readRDS(rds)
+state = vars_list$variables$STATE
+return(state)
+  }
+  subset_division <- function(year){
+rds <- paste0(year, '_variables.rds')
+vars_list <- readRDS(rds)
+division = vars_list$variables$DIVISION
+return(division)
+  }
+  
+}
+
 ```
 
 ## COMBINING YEARS
@@ -480,7 +746,8 @@ combine_years <- function(return_date, survey_years){
      results[[i]] <- return_date(survey_years[i])
    }
   tibble_results <- as_tibble(results, .name_repair = 'universal')
-  return(tibble_results)
+  class_tibble <- class(tibble_results) <- c("census", class(tibble_results))
+  return(class_tibble)
 }
 
 #Testing it out, using str() as I expect that this will yield a very large tibble
@@ -492,12 +759,75 @@ str(test_combine)
 
 ## NUMERIC SUMMARIES
 
-```{r}
+*This part didn't give me much trouble. I was getting a lot of errors about trying to do math with vectors of unequal length, but it turns out I had inputted one of the vectors wrong.*
 
+```{r}
+#Writing the function
+summary.census <- function(year, numeric_var, cat_var){
+  rds <- paste0(year, '_variables.rds')
+  var_list <- readRDS(rds)
+  
+  PWGTP = c(var_list$variables$PWGTP$values$range$min, var_list$variables$PWGTP$values$range$max)
+  AGEP = c(var_list$variables$AGEP$values$range$min, var_list$variables$AGEP$values$range$max)
+  GASP = c(var_list$variables$GASP$values$range$min, var_list$variables$GASP$values$range$max)
+  GRPIP = c(var_list$variables$GRPIP$values$range$min, var_list$variables$GRPIP$values$range$max)
+  JWMNP = c(var_list$variables$JWMNP$values$range$min, var_list$variables$JWMNP$values$range$max)
+  full_list <- list(PWGTP = PWGTP, AGEP = AGEP, GASP = GASP, GRPIP = GRPIP, JWMNP = JWMNP)
+  num_list <- lapply(full_list, as.numeric, na.rm = TRUE)
+  numeric_var <- num_list[[numeric_var]]
+  weight_vector <- num_list[['PWGTP']]
+  sample_mean <- sum(numeric_var*weight_vector)/sum(weight_vector)
+  sample_std_dev <- sqrt(sum(numeric_var*numeric_var*weight_vector)/sum(weight_vector)-sample_mean*sample_mean)
+  
+  FER = factor(unlist(var_list$variables$FER$values$item))
+  HHL = factor(unlist(var_list$variables$HHL$values$item))
+  SCH = factor(unlist(var_list$variables$SCH$values$item))
+  SCHL = factor(unlist(var_list$variables$SCHL$values$item))
+  SEX = factor(unlist(var_list$variables$SEX$values$item))
+  var_list <- list(FER = FER, HHL = HHL, SCH = SCH, SCHL = SCHL, SEX = SEX)
+  cat_var <- var_list[cat_var]
+  return(list(sample_mean, sample_std_dev, cat_var))
+}
+
+#Testing it out
+summary_test <- summary.census(2021, numeric_var = 'JWMNP', cat_var = 'HHL')
+summary_test
+
+summary_test_2 <- summary.census(2023, numeric_var = 'AGEP', cat_var = 'SEX')
+summary_test_2
 ```
 
 ## GRAPHICAL SUMMARIES
 
-```{r}
+\*The thing that gave me the most trouble with this part is that the x and y were different lengths.
 
+```{r}
+boxplot.census <- function(year, categorical_var, numeric_var){
+  rds <- paste0(year, '_variables.rds')
+  var_list <- readRDS(rds)
+  
+  PWGTP = c(var_list$variables$PWGTP$values$range$min, var_list$variables$PWGTP$values$range$max)
+  AGEP = c(var_list$variables$AGEP$values$range$min, var_list$variables$AGEP$values$range$max)
+  GASP = c(var_list$variables$GASP$values$range$min, var_list$variables$GASP$values$range$max)
+  GRPIP = c(var_list$variables$GRPIP$values$range$min, var_list$variables$GRPIP$values$range$max)
+  JWMNP = c(var_list$variables$JWMNP$values$range$min, var_list$variables$JWMNP$values$range$max)
+  full_list <- list(AGEP = AGEP, GASP = GASP, GRPIP = GRPIP, JWMNP = JWMNP)
+  num_list <- lapply(full_list, as.numeric, na.rm = TRUE)
+  numerical_var <- num_list[numeric_var]
+  
+  YEAR_CAT <- factor(c(2021, 2022, 2023, 2024))
+  FER = factor(unlist(var_list$variables$FER$values$item))
+  HHL = factor(unlist(var_list$variables$HHL$values$item))
+  SCH = factor(unlist(var_list$variables$SCH$values$item))
+  SCHL = factor(unlist(var_list$variables$SCHL$values$item))
+  SEX = factor(unlist(var_list$variables$SEX$values$item))
+  cat_list <- list(FER = FER, HHL = HHL, SCH = SCH, SCHL = SCHL, SEX = SEX, YEAR_CAT = YEAR_CAT)
+  categorical_var <- cat_list[categorical_var]
+
+  
+  return(plot('Numeric Variable at the Levels of the Categorical Variable', aes(x = categorical_var, y = numerical_var, fill = categorical_var, weight = 'PWGTP')))
+}
+
+boxplot_test <- boxplot.census(2021, categorical_var = 'HHL', numeric_var = 'GASP')
+boxplot_test
 ```
