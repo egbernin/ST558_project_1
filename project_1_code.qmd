@@ -15,6 +15,7 @@ library(jsonlite)
 library(dplyr)
 library(tidyverse)
 library(lubridate)
+library(stringr)
 ```
 
 *Writing functions to parse variable data.*
@@ -79,7 +80,11 @@ test_24$variables$SEX
 
 ## PARSING API DATA
 
-*Getting URL, writing helper function, and parsing data. These take a long time to run. (functions work, no editing needed, remove note later)*
+*Getting URL, writing helper function, and parsing data.*
+
+*These take a long time to run, querying the API directly through a link takes a long time for my computer to process.*
+
+*These presented my first problems with this project, I was getting errors about using both \$ and \[\] within my function to call certain objects. In the as_tibble function, I had been calling the object parsed_data\$data. I had seen in the reading and remembered from previous homework that that's something you should do when reading in API data. I found out that this was the issue when I accidentally wrote a function similar to this one 'wrong' and it ended up working perfectly fine. The part that was different was the lack of '\$data', as I had forgotten it.*
 
 ```{r}
 #Getting 2021 survey
@@ -141,168 +146,346 @@ parsed_tibble_24 <- helper_24(pums_data_24)
 str(parsed_tibble_24)
 ```
 
-*Writing function that allows user to change year of survey. This function takes a long time to run and returns a lot of data. The example at the bottom uses str() to reduce the amount of information returned. (function works, remove note later)*
+*Writing function that allows user to change year of survey.*
+
+*I previously was using if/else logic to write these functions, in the style below:*
+
+my_function \<- function(year){
+
+year \<- c(2021, 2022, 2023, 2024)
+
+if(2021){
+
+Code to be run
+
+}else if(2022){
+
+Code to be run
+
+} and so on.
+
+*I was having a lot of problems getting the right things to be returned with this. The functions themselves were also extremely long. I tried paste0 after seeing it in the reading for this class and it worked, so I was able to make the functions much shorter. I tried it with just the paste function but it ended up not working due to the space that it added.*
 
 ```{r}
 #Writing function to return year of survey
-return_date <- function(year_vector = 2024){
-  year_vector <- c(2021, 2022, 2023, 2024)
-  if(2021){
-    api_2021 <- 'api.census.gov/data/2021/acs/acs1/pums?get=AGEP,GRPIP,JWAP,JWDP,JWMNP,PWGTP,FER,HHL,SCH,SCHL,SEX,ST,REGION,DIVISION&key=416ac733e884381d5fc80215dc879af0edb1dd8b'
-    url_2021 <- httr::GET(api_2021)
-    parsed_data_2021 <- fromJSON(rawToChar(url_2021$content))
-    date_tibble_21 <- as_tibble(parsed_data_2021)
-    return(date_tibble_21)
-  }else if(2022){
-    api_2022 <- 'api.census.gov/data/2022/acs/acs1/pums?get=AGEP,GRPIP,JWAP,JWDP,JWMNP,PWGTP,FER,HHL,SCH,SCHL,SEX,ST,REGION,DIVISION&key=416ac733e884381d5fc80215dc879af0edb1dd8b'
-    url_2022 <- httr::GET(api_2022)
-    parsed_data_2022 <- fromJSON(rawToChar(url_2022$content))
-    date_tibble_22 <- as_tibble(parsed_data_2022)
-    return(date_tibble_22)
-  }else if(2023){
-    api_2023 <- 'api.census.gov/data/2023/acs/acs1/pums?get=AGEP,GRPIP,JWAP,JWDP,JWMNP,PWGTP,FER,HHL,SCH,SCHL,SEX,STATE,REGION,DIVISION&key=416ac733e884381d5fc80215dc879af0edb1dd8b'
-    url_2023 <- httr::GET(api_2023)
-    parsed_data_2023 <- fromJSON(rawToChar(url_2023$content))
-    date_tibble_23 <- as_tibble(parsed_data_2023)
-    return(date_tibble_23)
-  }else if(2024){
-    api_2024 <- 'api.census.gov/data/2024/acs/acs1/pums?get=AGEP,GRPIP,JWAP,JWDP,JWMNP,PWGTP,FER,HHL,SCH,SCHL,SEX,STATE,REGION,DIVISION&key=416ac733e884381d5fc80215dc879af0edb1dd8b'
-    url_2024 <- httr::GET(api_2024)
-    parsed_data_2024 <- fromJSON(rawToChar(url_2024$content))
-    date_tibble_24 <- as_tibble(parsed_data_2024)
-    return(date_tibble_24)
-  }
+return_date <- function(year = 2024){
+  rds <- paste0(year, '_variables.rds')
+  variables <- readRDS(rds)
+  return(variables)
 }
 
+#Testing this function
 test_date <- return_date(2021)
 str(test_date)
 ```
 
-*Writing functions to specify numeric variables to be returned*. (function still needs to be worked on)
+*Writing functions to change numeric variables from characters to numeric and then return them.*
+
+*With this function, I had the most amount of trouble with the type of objects the variables were. I was continuously getting errors and warnings about all sorts of things, particularly when trying to convert them to numeric variables. Finally, making them into vectors worked.*
 
 ```{r}
-
-```
-
-```{r}
-
-```
-
-*Writing functions to specify categorical variables to be returned. (function works but needs editing to fit task)*
-
-```{r}
-
-return_cat_vars <- function(year_of_survey){
-  year_of_survey <- c(2021,2022,2023,2024)
-  if(2021){
-    vars_2021 <- readRDS('2021_variables.rds')
-    FER <- factor(unlist(vars_2021$variables$FER))
-    HHL <- factor(unlist(vars_2021$variables$HHL))
-    SCH <- factor(unlist(vars_2021$variables$SCH))
-    SCHL <- factor(unlist(vars_2021$variables$SCHL))
-    SEX <- factor(unlist(vars_2021$variables$SEX))
-    return()
-  }else if(2022){
-    readRDS('2022_variables.rds')
-    FER <- factor(unlist(variables_2022$variables$FER))
-    HHL <- factor(unlist(variables_2022$variables$HHL))
-    SCH <- factor(unlist(variables_2022$variables$SCH))
-    SCHL <- factor(unlist(variables_2022$variables$SCHL))
-    SEX <- factor(unlist(variables_2022$variables$SEX))
-    return()
-  }else if(2023){
-    readRDS('2023_variables.rds')
-    FER <- factor(unlist(variables_2023$variables$FER))
-    HHL <- factor(unlist(variables_2023$variables$HHL))
-    SCH <- factor(unlist(variables_2023$variables$SCH))
-    SCHL <- factor(unlist(ariables_2023$variables$SCHL))
-    SEX <- factor(unlist(variables_2023$variables$SEX))
-    return()
-  }else if(2024){
-    readRDS('2024_variables.rds')
-    FER <- factor(unlist(variables_2024$variables$FER))
-    HHL <- factor(unlist(variables_2024$variables$HHL))
-    SCH <- factor(unlist(variables_2024$variables$SCH))
-    SCHL <- factor(unlist(variables_2024$variables$SCHL))
-    SEX <- factor(unlist(variables_2024$variables$SEX))
-    return()
-  }else{
-    'ERROR'
-  }
+#Writing function that returns numeric variables, also changes them from characters to numeric
+return_num_vars <- function(year, target_var = 'AGEP'){
+  rds <- paste0(year, "_variables.rds")
+  var_list <- readRDS(rds)
+  PWGTP = c(var_list$variables$PWGTP$values$range$min, var_list$variables$PWGTP$values$range$max)
+  AGEP = c(var_list$variables$AGEP$values$range$min, var_list$variables$AGEP$values$range$max)
+  GASP = c(var_list$variables$GASP$values$range$min, var_list$variables$GASP$values$range$max)
+  GRPIP = c(var_list$variables$GRPIP$values$range$min, var_list$variables$GRPIP$values$range$max)
+  JWMNP = c(var_list$variables$JWMNP$values$range$min, var_list$variables$JWMNP$values$range$max)
+  full_list <- list(AGEP, GASP, GRPIP, JWMNP)
+  num_list <- lapply(full_list, as.numeric, na.rm = TRUE)
+  return(list(num_list['PWGTP'], num_list[target_var]))
 }
 
-test_cat_vars <- return_cat_vars(2021)
+test_num <- return_num_vars(year = 2021, target_var = 'GASP')
+test_num
+```
+
+*Writing a function to turn the time data into numeric time data.*
+
+*This was definitely the part that gave me the most trouble. There was a point where the function I was trying to write would cause RStudio to shut down and become completely unresponsive.*
+
+```{r}
+return_JWAP <- function(year){
+variables <- paste0(year, '_variables.rds')
+variables_list <- readRDS(variables)
+variables_df <- data.frame(
+  data = unlist(variables_list$variables$JWAP$values$item),
+  stringsAsFactors = FALSE
+)
+
+to_minutes <- function(time_str, am_pm){
+  parts <- str_split(time_str, ':', simplify = TRUE)
+  hours <- as.numeric(parts[, 1])
+  minutes <- as.numeric(parts[, 2])
+  
+  is_pm <- str_detect(am_pm, 'p')
+  
+  hours <- case_when(
+    is_pm & hours != 12 ~ hours + 12,
+    !is_pm & hours == 12 ~ 0,
+    TRUE                 ~ hours
+  )
+  return(hours * 60 + minutes)
+}
+processed <- variables_df |>
+  mutate(
+    start_time = str_extract(data, "^\\d{1,2}:\\d{2}"),
+    start_ampm = str_extract(data, "^\\d{1,2}:\\d{2}\\s*[ap]\\.m\\."),
+    end_time = str_extract(data, "\\d{1,2}:\\d{2}\\s*[ap]\\.m\\.$") %>% str_extract("^\\d{1,2}:\\d{2}"),
+    end_ampm = str_extract(data, "\\d{1,2}:\\d{2}\\s*[ap]\\.m\\.$"),
+    start_mins = to_minutes(start_time, start_ampm),
+    end_mins = to_minutes(end_time, end_ampm),
+    end_mins = if_else(end_mins < start_mins, end_mins + 1440, end_mins),
+    midpoint_mins = (start_mins + end_mins) / 2,
+    midpoint_mins = midpoint_mins %% 1440,
+    midpoint_time = sprintf("%02d:%02d", floor(midpoint_mins / 60), round(midpoint_mins %% 60))
+  ) |>
+  select(midpoint_time)
+print(processed)
+}
+
+return_JWDP <- function(year){
+  variables <- paste0(year, '_variables.rds')
+variables_list <- readRDS(variables)
+variables_df <- data.frame(
+  data = unlist(variables_list$variables$JWDP$values$item),
+  stringsAsFactors = FALSE
+)
+
+to_minutes <- function(time_str, am_pm){
+  parts <- str_split(time_str, ':', simplify = TRUE)
+  hours <- as.numeric(parts[, 1])
+  minutes <- as.numeric(parts[, 2])
+  
+  is_pm <- str_detect(am_pm, 'p')
+  
+  hours <- case_when(
+    is_pm & hours != 12 ~ hours + 12,
+    !is_pm & hours == 12 ~ 0,
+    TRUE                 ~ hours
+  )
+  return(hours * 60 + minutes)
+}
+processed <- variables_df |>
+  mutate(
+    start_time = str_extract(data, "^\\d{1,2}:\\d{2}"),
+    start_ampm = str_extract(data, "^\\d{1,2}:\\d{2}\\s*[ap]\\.m\\."),
+    end_time = str_extract(data, "\\d{1,2}:\\d{2}\\s*[ap]\\.m\\.$") %>% str_extract("^\\d{1,2}:\\d{2}"),
+    end_ampm = str_extract(data, "\\d{1,2}:\\d{2}\\s*[ap]\\.m\\.$"),
+    start_mins = to_minutes(start_time, start_ampm),
+    end_mins = to_minutes(end_time, end_ampm),
+    end_mins = if_else(end_mins < start_mins, end_mins + 1440, end_mins),
+    midpoint_mins = (start_mins + end_mins) / 2,
+    midpoint_mins = midpoint_mins %% 1440,
+    midpoint_time = sprintf("%02d:%02d", floor(midpoint_mins / 60), round(midpoint_mins %% 60))
+  ) |>
+  select(midpoint_time)
+print(processed)
+}
+
+JWAP_test <- return_JWAP(2021)
+JWAP_test
+JWDP_test <- return_JWDP(2021)
+JWDP_test
+```
+
+```{r}
+#Testing out a way to change the data to the right form
+library(hms)
+library(lubridate)
+test_time <- readRDS('2021_variables.rds')
+test_col <- test_time$variables$JWAP$values$item[1]
+
+clean_time <- gsub('to|\\a.m.|\\p.m.|\\:|\\ ', '', test_col)
+
+split_1 <- str_sub(clean_time, start = 1, end = 3)
+split_1
+split_2 <- str_sub(clean_time, start = 4, end = 6)
+split_2
+num_1 <- as.numeric(split_1)
+num_1
+num_2 <- as.numeric(split_2)
+num_2
+num_vec <- c(num_1, num_2)
+mean <- mean(num_vec)
+mean
+time <- as.POSIXct(sprintf('%04d', mean), format = '%H%M')
+time
+new_time <- format(time, format = '%H:%M')
+new_time
+#This does work! This will be used as a reference going forward with writing this function
+
+```
+
+*Writing functions to specify categorical variables to be returned.*
+
+*Writing these didn't give me too much trouble outside of figuring out how to change the variables into factors. I had been previously been using as.factor(), which had not been working.*
+
+```{r}
+#Writing function
+return_cat_vars <- function(year, target_var = 'SEX'){
+rds <- paste0(year, '_variables.rds')
+var_list <- readRDS(rds)
+FER = factor(unlist(var_list$variables$FER))
+HHL = factor(unlist(var_list$variables$HHL))
+SCH = factor(unlist(var_list$variables$SCH))
+SCHL = factor(unlist(var_list$variables$SCHL))
+SEX = factor(unlist(var_list$variables$SEX))
+var_list <- list(FER, HHL, SCH, SCHL, SEX)
+return(var_list[target_var])
+}
+
+#Testing it out
+test_cat_vars <- return_cat_vars(2023, 'FER')
 test_cat_vars
 ```
 
-```{r}
-test_list <- list(12, 3, 9, 55)
-test_function <- function(date,test_list = 55){
-  date <- c(2000, 2001, 2002)
-  if(2000){
-    return(test_list)
-  }else if(2001){
-    return(test_list)
-  }else if(2002){
-    return(test_list)
-  }else{
-    'ERROR'
-  }
-}
+*Writing function to specify geography level.*
 
-test_function(2000, test_list = 12)
-```
-
-*Writing function to specify geography level. (function works, no editing needed, remove note later)*
+*I didn't have much trouble with this one.*
 
 ```{r}
-geography_level <- function(year_geo){
- year_geo <- c(2021, 2022, 2023, 2024)
- if(2021){
-   geo_api <- 'api.census.gov/data/2021/acs/acs1/pums?get=ST,REGION,DIVISION&key=416ac733e884381d5fc80215dc879af0edb1dd8b'
-   geo_url <- httr::GET(geo_api)
-   geo_parsed <- fromJSON(rawToChar(geo_url$content))
-   geo_tibble <- as_tibble(geo_parsed)
-   return(geo_tibble)
- }else if(2022){
-   geo_api <- 'api.census.gov/data/2022/acs/acs1/pums?get=ST,REGION,DIVISION&key=416ac733e884381d5fc80215dc879af0edb1dd8b'
-   geo_url <- httr::GET(geo_api)
-   geo_parsed <- fromJSON(rawToChar(geo_url$content))
-   geo_tibble <- as_tibble(geo_parsed)
-   return(geo_tibble)
- }else if(2023){
-   geo_api <- 'api.census.gov/data/2023/acs/acs1/pums?get=STATE,REGION,DIVISION&key=416ac733e884381d5fc80215dc879af0edb1dd8b'
-   geo_url <- httr::GET(geo_api)
-   geo_parsed <- fromJSON(rawToChar(geo_url$content))
-   geo_tibble <- as_tibble(geo_parsed)
-   return(geo_tibble)
- }else if(2024){
-   geo_api <- 'api.census.gov/data/2024/acs/acs1/pums?get=STATE,REGION,DIVISION&key=416ac733e884381d5fc80215dc879af0edb1dd8b'
-   geo_url <- httr::GET(geo_api)
-   geo_parsed <- fromJSON(rawToChar(geo_url$content))
-   geo_tibble <- as_tibble(geo_parsed)
-   return(geo_tibble)
- }else{
-   'ERROR'
- }
+#Writing function
+geography_level <- function(year, target_var = 'REGION'){
+rds <- paste0(year, '_variables.rds')
+vars_list <- readRDS(rds)
+REGION = vars_list$variables$REGION
+STATE = vars_list$variables$STATE
+DIVISION = vars_list$variables$DIVISION
+geo_list <- list(REGION, STATE, DIVISION)
+return(geo_list[target_var])
 }
 
+#Testing this function
 test_geo <- geography_level(2021)
 test_geo
 ```
 
-*Writing function to specify region, division, or state to subset data on.*
+*Writing functions to specify region, division, or state to subset data on.*
+
+*This group was very easy to put together.*
 
 ```{r}
-#Default values: Region = South, Division = Puerto Rico, State = 'North Carolina/NC'
+#Writing the region funcition
+subset_region <- function(year){
+rds <- paste0(year, '_variables.rds')
+vars_list <- readRDS(rds)
+region = vars_list$variables$REGION
+return(region)
+}
+#Testing
+test_geo <- subset_region(2022)
+test_geo
+```
+
+```{r}
+#Writing the state function
+
+#This one should be used for the 2021 and 2022 data
+subset_st <- function(year){
+rds <- paste0(year, '_variables.rds')
+vars_list <- readRDS(rds)
+state = vars_list$variables$ST
+return(state)
+}
+
+#This one should be used for the 2023 and 2024 data
+subset_state <- function(year){
+rds <- paste0(year, '_variables.rds')
+vars_list <- readRDS(rds)
+state = vars_list$variables$STATE
+return(state)
+}
+#Testing
+test_st <- subset_st(2021)
+test_st
+
+test_state <- subset_state(2024)
+test_state
+```
+
+```{r}
+#Writing the division function
+subset_division <- function(year){
+rds <- paste0(year, '_variables.rds')
+vars_list <- readRDS(rds)
+division = vars_list$variables$DIVISION
+return(division)
+}
+#Testing
+test_division <- subset_division(2022)
+test_division
+```
+
+## PUTTING EVERYTHING TOGETHER
+
+*There are two different main functions because of the presence of different variables for state depending on the year.*
+
+```{r}
+main_function_21_22 <- function(year){
+  rds <- paste0(year, '_variables.rds')
+  vars_list <- readRDS(rds)
+  final_date <- return_date(year)
+  final_num <- return_num_vars(year)
+  final_JWAP <- return_JWAP(year)
+  final_JWDP <- return_JWDP(year)
+  final_cat <- return_cat_vars(year)
+  final_geo <- return_geography(year)
+  final_region <- subset_region(year)
+  final_st <- subset_st(year)
+  final_division <- subset_division(year)
+  final_list <- list(final_date, final_num, final_JWAP, final_JWDP, final_cat, final_geo, final_region, final_st, final_division, final_list)
+  final_tibble <- as_tibble(final_list)
+  final_census <- class(final_tibble) <- c("census", class(final_tibble))
+  return(final_census)
+}
+
+main_function_23_24 <- function(year){
+  rds <- paste0(year, '_variables.rds')
+  vars_list <- readRDS(rds)
+  final_date <- return_date(year)
+  final_num <- return_num_vars(year)
+  final_JWAP <- return_JWAP(year)
+  final_JWDP <- return_JWDP(year)
+  final_cat <- return_cat_vars(year)
+  final_geo <- return_geography(year)
+  final_region <- subset_region(year)
+  final_state <- subset_state(year)
+  final_division <- subset_division(year)
+  final_list <- list(final_date, final_num, final_JWAP, final_JWDP, final_cat, final_geo, final_region, final_state, final_division, final_list)
+  final_tibble <- as_tibble(final_list)
+  final_census <- class(final_tibble) <- c("census", class(final_tibble))
+  return(final_census)
+}
 ```
 
 ## COMBINING YEARS
 
-*Writing function to specify multiple years of survey data.*
+*Writing function to specify multiple years of survey data. This function results in a HUGE amount of returned data. The only issue I had with this is that I frequently got an error saying that I needed to include a .name_repair argument in my as_tibble function.*
 
 ```{r}
+#Copying the function that returns a single year into the same code chunk as the new function so that it all can be run together smoothly
+return_date <- function(year = 2024){
+  rds <- paste0(year, '_variables.rds')
+  variables <- readRDS(rds)
+  return(variables)
+}
 
+#Function that returns multiple years
+combine_years <- function(return_date, survey_years){
+  results <- list()
+   for(i in seq_along(survey_years)){
+     results[[i]] <- return_date(survey_years[i])
+   }
+  tibble_results <- as_tibble(results, .name_repair = 'universal')
+  return(tibble_results)
+}
+
+#Testing it out, using str() as I expect that this will yield a very large tibble
+test_combine <- combine_years(return_date, c(2021, 2022, 2023, 2024))
+str(test_combine)
 ```
 
 # PART TWO: WRITING A GENERIC FUNCTION FOR SUMMARIZING
