@@ -1102,21 +1102,12 @@ GRPIP_SCHL_summary
 
 ## GRAPHICAL SUMMARIES
 
-*I was not able to figure out how to get this one to work.*
+*I was not able to figure out how to get this one to work. This is the code that I had been trying to run. I could not include it in a chunk because it messed up the rendering process of this document.*
 
-```{r}
-combined_census <- combine_years(return_date, c(2021,2022,2023,2024))
+combined_census \<- combine_years(return_date, c(2021,2022,2023,2024))
 
+boxplot.census \<- function(year, categorical_var, numeric_var){ categorical_var \<- combined_census\[\[categorical_var\]\] numeric_var \<- combined_census\[\[numeric_var\]\]
 
-boxplot.census <- function(year, categorical_var, numeric_var){
-  categorical_var <- combined_census[[categorical_var]]
-  numeric_var <- combined_census[[numeric_var]]
+boxplot_result \<- ggplot(data = combined_census, aes(x = categorical_var, y = numeric_var, fill = categorical_var, weight = 'PWGTP')) + geom_boxplot() return(boxplot_result) }
 
-  boxplot_result <- ggplot(data = combined_census, aes(x = categorical_var, y = numeric_var, fill = categorical_var, weight = 'PWGTP')) +
-    geom_boxplot()
-  return(boxplot_result)
-}
-
-boxplot_test <- boxplot.census(2021, categorical_var = 'SEX', numeric_var = 'AGEP')
-boxplot_test
-```
+boxplot_test \<- boxplot.census(2021, categorical_var = 'SEX', numeric_var = 'AGEP') boxplot_test
